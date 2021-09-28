@@ -10,6 +10,13 @@ spring:
     url: jdbc:mysql://192.168.2.31:3306/jtyjy_gateway?useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&serverTimezone=Asia/Shanghai
     username: mysql
     password: 123456
+  redis:
+    #数据库索引
+    database: 0
+    host: 192.168.5.106
+    port: 30538
+    #连接超时时间
+    timeout: 5000
   cloud:
     gateway:
       discovery:

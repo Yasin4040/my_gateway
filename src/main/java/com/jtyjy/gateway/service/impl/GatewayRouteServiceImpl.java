@@ -2,14 +2,17 @@ package com.jtyjy.gateway.service.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.jtyjy.gateway.dto.RouteDTO;
+import com.jtyjy.gateway.infrastructure.config.RedisListenerConfig;
 import com.jtyjy.gateway.infrastructure.utils.JsonUtils;
 import com.jtyjy.gateway.repository.model.GatewayRoute;
 import com.jtyjy.gateway.repository.mapper.GatewayRouteMapper;
 import com.jtyjy.gateway.service.GatewayRouteService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.event.RefreshRoutesEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.ApplicationEventPublisherAware;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -29,6 +32,9 @@ import java.util.stream.Collectors;
 public class GatewayRouteServiceImpl extends ServiceImpl<GatewayRouteMapper, GatewayRoute> implements GatewayRouteService, ApplicationEventPublisherAware {
 
     private ApplicationEventPublisher applicationEventPublisher;
+
+    @Autowired
+    private StringRedisTemplate redisTemplate;
 
     @Override
     public void addRoute(RouteDTO routeDTO) {
@@ -64,6 +70,7 @@ public class GatewayRouteServiceImpl extends ServiceImpl<GatewayRouteMapper, Gat
 
     @Override
     public void reloadConfig() {
+        redisTemplate.convertAndSend(RedisListenerConfig.SYNC_ROUTE_UPDATE,"update");
         this.applicationEventPublisher.publishEvent(new RefreshRoutesEvent(this));
     }
 
