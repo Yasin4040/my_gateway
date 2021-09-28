@@ -1,7 +1,6 @@
-package com.jtyjy.gateway.infrastructure.config;
+package com.jtyjy.gateway.config;
 
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.reactive.CorsWebFilter;

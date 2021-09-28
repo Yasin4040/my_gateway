@@ -2,7 +2,7 @@ package com.jtyjy.gateway.controller;
 
 
 import com.jtyjy.gateway.dto.RouteDTO;
-import com.jtyjy.gateway.infrastructure.web.Result;
+import com.jtyjy.gateway.web.Result;
 import com.jtyjy.gateway.service.GatewayRouteService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

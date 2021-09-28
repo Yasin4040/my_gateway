@@ -1,4 +1,4 @@
-package com.jtyjy.gateway.infrastructure.web;
+package com.jtyjy.gateway.web;
 
 import java.util.HashMap;
 import java.util.Map;

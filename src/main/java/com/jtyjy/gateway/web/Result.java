@@ -1,7 +1,7 @@
-package com.jtyjy.gateway.infrastructure.web;
+package com.jtyjy.gateway.web;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.jtyjy.gateway.infrastructure.exception.BizException;
+import com.jtyjy.gateway.exception.BizException;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Data;

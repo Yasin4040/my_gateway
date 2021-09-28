@@ -1,7 +1,7 @@
 package com.jtyjy.gateway.oauth.filter;
 
 import com.jtyjy.gateway.dto.UserDTO;
-import com.jtyjy.gateway.infrastructure.utils.JsonUtils;
+import com.jtyjy.gateway.utils.JsonUtils;
 import net.minidev.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

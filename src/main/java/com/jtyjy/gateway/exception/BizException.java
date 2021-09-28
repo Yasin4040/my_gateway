@@ -1,6 +1,6 @@
-package com.jtyjy.gateway.infrastructure.exception;
+package com.jtyjy.gateway.exception;
 
-import com.jtyjy.gateway.infrastructure.web.ResultCode;
+import com.jtyjy.gateway.web.ResultCode;
 
 public class BizException extends RuntimeException{
 

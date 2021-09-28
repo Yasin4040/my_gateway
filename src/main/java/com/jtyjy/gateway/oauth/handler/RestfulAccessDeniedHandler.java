@@ -1,8 +1,8 @@
 package com.jtyjy.gateway.oauth.handler;
 
-import com.jtyjy.gateway.infrastructure.utils.JsonUtils;
-import com.jtyjy.gateway.infrastructure.web.Result;
-import com.jtyjy.gateway.infrastructure.web.ResultCode;
+import com.jtyjy.gateway.utils.JsonUtils;
+import com.jtyjy.gateway.web.Result;
+import com.jtyjy.gateway.web.ResultCode;
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

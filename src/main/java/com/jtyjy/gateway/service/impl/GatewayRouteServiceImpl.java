@@ -2,8 +2,8 @@ package com.jtyjy.gateway.service.impl;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.jtyjy.gateway.dto.RouteDTO;
-import com.jtyjy.gateway.infrastructure.config.RedisListenerConfig;
-import com.jtyjy.gateway.infrastructure.utils.JsonUtils;
+import com.jtyjy.gateway.config.RedisListenerConfig;
+import com.jtyjy.gateway.utils.JsonUtils;
 import com.jtyjy.gateway.repository.model.GatewayRoute;
 import com.jtyjy.gateway.repository.mapper.GatewayRouteMapper;
 import com.jtyjy.gateway.service.GatewayRouteService;
@@ -15,7 +15,6 @@ import org.springframework.context.ApplicationEventPublisherAware;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
