@@ -30,7 +30,8 @@ public class ResourceSecurityConfig {
                 .matchers(EndpointRequest.toAnyEndpoint()).permitAll()
                 // SCOPE_ 前缀对应认证服务器的客户端 scopes(...) 配置
                 //.pathMatchers("/api").hasAuthority("SCOPE_api")
-                .pathMatchers("/route").permitAll()
+                .pathMatchers("/route/**").permitAll()
+                .pathMatchers("/v2/**", "/v3/**", "/swagger-resources/**", "/doc.html", "/webjars/**").permitAll()
                 //.pathMatchers("/*.js").authenticated()
                 //.anyExchange().permitAll()
                 .anyExchange().authenticated()
