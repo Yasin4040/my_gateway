@@ -4,6 +4,7 @@ package com.jtyjy.gateway.controller;
 import com.jtyjy.gateway.dto.RouteDTO;
 import com.jtyjy.gateway.infrastructure.web.Result;
 import com.jtyjy.gateway.service.GatewayRouteService;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -31,6 +32,7 @@ import java.security.Principal;
  */
 @RestController
 @RequestMapping("/route")
+@Api(tags = "路由管理")
 public class GatewayRouteController {
 
     @Autowired
