@@ -22,7 +22,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- *
  * 核心配置类，加载数据库的路由配置信息到数据库
  */
 @Component

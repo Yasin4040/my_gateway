@@ -6,12 +6,20 @@ import com.jtyjy.gateway.infrastructure.web.Result;
 import com.jtyjy.gateway.service.GatewayRouteService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.ReactiveSecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.provider.OAuth2Authentication;
+import org.springframework.security.web.server.context.SecurityContextServerWebExchange;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ServerWebExchange;
+
+import java.security.Principal;
 
 /**
  * <p>
@@ -44,7 +52,8 @@ public class GatewayRouteController {
 
     @PostMapping("/reloadConfig")
     @ApiOperation(value = "刷新配置")
-    public Result<Void> reloadConfig(){
+    public Result<Void> reloadConfig(Principal principal, ServerWebExchange exchange){
+        ReactiveSecurityContextHolder.getContext();
         gatewayRouteService.reloadConfig();
         return Result.ok();
     }

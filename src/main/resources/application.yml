@@ -19,7 +19,11 @@ spring:
       discovery:
         server-addr: 192.168.5.106:31559
         group: local
-
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          public-key-location: classpath:public.key
 logging:
   level:
     org.springframework.cloud.gateway: debug
