@@ -30,8 +30,8 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
 
   @Override
   public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-    return exchange.getPrincipal().defaultIfEmpty(() -> "").flatMap(principal -> {
-      if(principal.getName().equals("")){
+    return exchange.getPrincipal().defaultIfEmpty(() -> "unknown").flatMap(principal -> {
+      if("unknown".equals(principal.getName())){
         return chain.filter(exchange);
       }
       JwtAuthenticationToken jwtAuthenticationToken = (JwtAuthenticationToken) principal;
