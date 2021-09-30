@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.security.Principal;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -29,7 +30,10 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
 
   @Override
   public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-    return exchange.getPrincipal().flatMap(principal -> {
+    return exchange.getPrincipal().defaultIfEmpty(() -> "").flatMap(principal -> {
+      if(principal.getName().equals("")){
+        return chain.filter(exchange);
+      }
       JwtAuthenticationToken jwtAuthenticationToken = (JwtAuthenticationToken) principal;
       Map<String, Object> claims = jwtAuthenticationToken.getToken().getClaims();
       LOGGER.info("AuthGlobalFilter.filter() user:{}", claims);
@@ -54,6 +58,6 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
 
   @Override
   public int getOrder() {
-    return 0;
+    return 1;
   }
 }
