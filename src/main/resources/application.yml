@@ -40,7 +40,7 @@ spring:
     nacos:
       discovery:
         server-addr: 192.168.5.106:31559
-        group: local
+        group: @env@
   security:
     oauth2:
       resourceserver:

@@ -40,7 +40,7 @@ pipeline {
           steps {
             sh 'echo "开始maven构建"'
             sh '''
-                mvn clean install -Dmaven.test.skip=true
+                mvn clean install -Dmaven.test.skip=true -Denv=$env_type
                 cp target/$jar_name docker/
             '''
           }
