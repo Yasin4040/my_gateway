@@ -11,4 +11,4 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 WORKDIR /
 
-ENTRYPOINT ["java", "-Xms384m", "-Xms384m", "-javaagent:/usr/local/agent/skywalking-agent.jar", "-DSW_AGENT_NAME=jtyjy-api-gateway", "-DSW_AGENT_COLLECTOR_BACKEND_SERVICES=192.168.5.106:30218", "-jar", "jtyjy-api-gateway.jar"]
+ENTRYPOINT ["java", "-Xms384m", "-Xmx384m", "-javaagent:/usr/local/agent/skywalking-agent.jar", "-DSW_AGENT_NAME=jtyjy-api-gateway", "-DSW_AGENT_COLLECTOR_BACKEND_SERVICES=192.168.5.106:30218", "-jar", "jtyjy-api-gateway.jar"]
