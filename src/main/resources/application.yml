@@ -49,4 +49,4 @@ spring:
 logging:
   level:
     org.springframework.cloud.gateway: debug
-    org.springframework.cloud.gateway.filter.LoadBalancerClientFilter: TRACE
+    org.springframework.cloud.gateway.filter: TRACE

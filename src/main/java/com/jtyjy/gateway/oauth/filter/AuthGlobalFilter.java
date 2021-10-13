@@ -28,6 +28,8 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
 
   private final static Logger LOGGER = LoggerFactory.getLogger(AuthGlobalFilter.class);
 
+  public static final String userHead = "json-user";
+
   @Override
   public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
     return exchange.getPrincipal().defaultIfEmpty(() -> "unknown").flatMap(principal -> {
@@ -39,16 +41,9 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
       LOGGER.info("AuthGlobalFilter.filter() user:{}", claims);
 
       //将user插入header
-      UserDTO userDTO = new UserDTO();
-      userDTO.setId((Long) claims.get("id"));
-      userDTO.setUsername((String) claims.get("user_name"));
-      JSONArray scopes = (JSONArray) claims.get("scope");
-      JSONArray authorities = (JSONArray) claims.get("authorities");
-      userDTO.setScopes(Stream.of(scopes.toArray()).map(s->(String)s).collect(Collectors.toList()));
-      userDTO.setAuthorities(Stream.of(authorities.toArray()).map(s->(String)s).collect(Collectors.toList()));
       ServerHttpRequest request = exchange.getRequest().mutate()
               .headers(httpHeaders -> httpHeaders.remove("Authorization"))
-              .header("json-user", JsonUtils.toJson(userDTO)).build();
+              .header(userHead, JsonUtils.toJson(UserDTO.toUserDTO(claims))).build();
       ServerWebExchange newExchange = exchange.mutate().request(request).build();
 
       return chain.filter(newExchange);

@@ -26,7 +26,7 @@ import java.security.Principal;
  * @since 2021-09-24
  */
 @RestController
-@RequestMapping("/route")
+@RequestMapping("/gateway/route")
 @Api(tags = "路由管理")
 public class GatewayRouteController {
 
