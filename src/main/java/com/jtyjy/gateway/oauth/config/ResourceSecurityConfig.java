@@ -1,5 +1,6 @@
 package com.jtyjy.gateway.oauth.config;
 
+import com.jtyjy.gateway.oauth.AuthorizationManager;
 import com.jtyjy.gateway.oauth.handler.RestAuthenticationEntryPoint;
 import com.jtyjy.gateway.oauth.handler.RestfulAccessDeniedHandler;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,13 +31,12 @@ public class ResourceSecurityConfig {
                 .matchers(EndpointRequest.toAnyEndpoint()).permitAll()
                 // SCOPE_ 前缀对应认证服务器的客户端 scopes(...) 配置
                 //.pathMatchers("/api").hasAuthority("SCOPE_api")
-                .pathMatchers("/gateway/route/**").permitAll()
-                .pathMatchers("/uaa/**").permitAll()
-                .pathMatchers("/v2/**", "/v3/**", "/swagger-resources/**", "/doc.html", "/webjars/**").permitAll()
+                .pathMatchers("/v2/**", "/v3/**", "/swagger-resources/**",
+                        "/doc.html", "/webjars/**", "/uaa/oauth/**", "/ca/oauth/**", "/login.html").permitAll() //白名单
                 //.pathMatchers("/*.js").authenticated()
                 //.anyExchange().permitAll()
-                .anyExchange().authenticated()
-                //.anyExchange().access(authorizationManager) // 鉴权管理器配置
+                .anyExchange().authenticated() //默认的鉴权管理
+                //.anyExchange().access(new AuthorizationManager()) // 自定义鉴权管理器配置
                 .and().exceptionHandling()
                 .accessDeniedHandler(restfulAccessDeniedHandler) // 处理未授权
                 .authenticationEntryPoint(restAuthenticationEntryPoint) // 处理未认证

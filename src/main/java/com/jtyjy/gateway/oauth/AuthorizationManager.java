@@ -1,9 +1,12 @@
 package com.jtyjy.gateway.oauth;
 
+import net.minidev.json.JSONArray;
+import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.ReactiveAuthorizationManager;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.web.server.authorization.AuthorizationContext;
 import org.springframework.stereotype.Component;
 import reactor.core.publisher.Mono;
@@ -13,11 +16,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
- * 自定义鉴权管理器，用于判断是否有资源的访问权限
+ * 自定义鉴权管理器
+ * 用于判断是否有资源的访问权限
  * 可以处理白名单
  * 权限控制
  */
-@Component
 public class AuthorizationManager implements ReactiveAuthorizationManager<AuthorizationContext> {
 
     @Override
@@ -35,7 +38,19 @@ public class AuthorizationManager implements ReactiveAuthorizationManager<Author
         .any(authorities::contains)
         .map(AuthorizationDecision::new)
         .defaultIfEmpty(new AuthorizationDecision(false));*/
-        return Mono.just(new AuthorizationDecision(false));
+        /*return mono.map(authentication -> {
+            JwtAuthenticationToken jwtAuthenticationToken = (JwtAuthenticationToken) authentication;
+            JSONArray jsonArray = (JSONArray) jwtAuthenticationToken.getTokenAttributes().get("scope");
+            //authorizationContext.getExchange().getRequest().getPath()
+            //jsonArray.contains()
+            return getAuthorizationDecision(authentication);
+        }).defaultIfEmpty(new AuthorizationDecision(false));*/
+
+        return Mono.just(new AuthorizationDecision(true));
+    }
+
+    private AuthorizationDecision getAuthorizationDecision(Authentication authentication) {
+        return new AuthorizationDecision(authentication.isAuthenticated());
     }
 
 }
