@@ -1,7 +1,7 @@
 pipeline {
     agent any
     parameters {
-        choice(name: 'env_type', choices: ['dev', 'test', 'pre', 'prod'], description: '部署环境')
+        choice(name: 'env_type', choices: ['dev', 'test', 'pre', 'prod', 'local'], description: '部署环境')
         string(name: 'branch', defaultValue: 'master', description: '分支')
         string(name: 'cpu', defaultValue: '200m', description: '分配cpu，默认：0.2核')
         string(name: 'memory', defaultValue: '512Mi', description: '分配内存，默认：512兆')
