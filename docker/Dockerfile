@@ -1,4 +1,4 @@
-FROM test.harbor.jtyjy.com/library/jdk-skywalking:jdk8
+FROM test.harbor.jtyjy.com/library/jdk-skywalking:oracle-jdk8-8.7
 
 ADD ./jtyjy-api-gateway.jar /jtyjy-api-gateway.jar
 
