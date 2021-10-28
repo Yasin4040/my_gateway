@@ -28,7 +28,7 @@ pipeline {
                 git branch: "${branch}", credentialsId: 'gitlab-yx-passwd', url: "${gitUrl}"
                 env.gitVersion = sh returnStdout: true, script: "git log --abbrev-commit --pretty=format:%h -1"
                 if ( env_type != 'prod' ) {
-                    env.tagname = "${docker_tagname}_${env.gitVersion}"
+                    env.tagname = "${docker_tagname}_${env_type}_${env.gitVersion}"
                 }else{ //如果是生产发布版则不带git版本
                     env.tagname = "${docker_tagname}"
                 }
@@ -78,6 +78,7 @@ pipeline {
                             }\
                           ],\
                           "projectName": "${appname}",\
+                          "namespace": "${env_type}",\
                           "requestCpu": "${cpu}",\
                           "requestMemory": "${memory}"\
                         }\
