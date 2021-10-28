@@ -15,7 +15,7 @@ pipeline {
         jar_name = "jtyjy-api-gateway.jar" //打包成功的jar包名
         enable_service = "NodePort" //不启用填空字符串 可选 ClusterIP或NodePort
         port="11001" //springboot的http端口
-        gitUrl = "http://192.168.4.93/zxw20943/jtyjy-api-gateway.git" //git地址
+        gitUrl = "ssh://git@192.168.4.93:222/jtyjy_mall/jtyjy-api-gateway.git" //git地址
         //------------------------------------
 
         docker_tagname = "test.harbor.jtyjy.com/library/${appname}:${version}"
@@ -25,7 +25,7 @@ pipeline {
         stage('check out source') {
             steps {
               script {
-                git branch: "${branch}", credentialsId: 'gitlab-yx-passwd', url: "${gitUrl}"
+                git branch: "${branch}", credentialsId: 'gitlab-ssh', url: "${gitUrl}"
                 env.gitVersion = sh returnStdout: true, script: "git log --abbrev-commit --pretty=format:%h -1"
                 if ( env_type != 'prod' ) {
                     env.tagname = "${docker_tagname}_${env_type}_${env.gitVersion}"
