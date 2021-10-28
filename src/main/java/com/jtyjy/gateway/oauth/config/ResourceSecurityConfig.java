@@ -32,7 +32,7 @@ public class ResourceSecurityConfig {
                 // SCOPE_ 前缀对应认证服务器的客户端 scopes(...) 配置
                 //.pathMatchers("/api").hasAuthority("SCOPE_api")
                 .pathMatchers("/v2/**", "/v3/**", "/swagger-resources/**",
-                        "/doc.html", "/webjars/**", "/uaa/oauth/**", "/ca/oauth/**", "/login.html").permitAll() //白名单
+                        "/doc.html", "/webjars/**", "/auth/user/**", "/auth/emp/**").permitAll() //白名单
                 //.pathMatchers("/*.js").authenticated()
                 //.anyExchange().permitAll()
                 .anyExchange().authenticated() //默认的鉴权管理
