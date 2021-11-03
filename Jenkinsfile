@@ -16,6 +16,7 @@ pipeline {
         enable_service = "NodePort" //不启用填空字符串 可选 ClusterIP或NodePort
         port="11001" //springboot的http端口
         gitUrl = "ssh://git@192.168.4.93:222/jtyjy_mall/jtyjy-api-gateway.git" //git地址
+        swAddr = "192.168.5.106:30218" //skywalking 地址
         //------------------------------------
 
         docker_tagname = "test.harbor.jtyjy.com/library/${appname}:${version}"
@@ -77,7 +78,7 @@ pipeline {
                               "targetPort": ${port}\
                             }\
                           ],\
-                          "env": {"spring.profiles.active":"${env_type}"},\
+                          "env": {"spring.profiles.active":"${env_type}", "SW_AGENT_NAME":"${appname}-${env_type}", "SW_AGENT_COLLECTOR_BACKEND_SERVICES":"${swAddr}"},\
                           "projectName": "${appname}",\
                           "namespace": "${env_type}",\
                           "requestCpu": "${cpu}",\
