@@ -28,7 +28,7 @@ pipeline {
                 git branch: "${branch}", credentialsId: 'gitlab-ssh', url: "${gitUrl}"
                 env.gitVersion = sh returnStdout: true, script: "git log --abbrev-commit --pretty=format:%h -1"
                 if ( env_type != 'prod' ) {
-                    env.tagname = "${docker_tagname}_${env_type}_${env.gitVersion}"
+                    env.tagname = "${docker_tagname}_${env.gitVersion}"
                 }else{ //如果是生产发布版则不带git版本
                     env.tagname = "${docker_tagname}"
                 }
@@ -40,7 +40,7 @@ pipeline {
           steps {
             sh 'echo "开始maven构建"'
             sh '''
-                mvn clean install -Dmaven.test.skip=true -Denv=$env_type
+                mvn clean install -Dmaven.test.skip=true
                 cp target/$jar_name docker/
             '''
           }
@@ -53,7 +53,7 @@ pipeline {
                     cd docker/
                     echo $jar_name
                     echo ${env.tagname}
-                    docker -H 192.168.5.108:2375 build --build-arg env_type=$env_type --build-arg jar_name=$jar_name --no-cache -t ${env.tagname} .
+                    docker -H 192.168.5.108:2375 build --build-arg jar_name=$jar_name --no-cache -t ${env.tagname} .
                     docker -H 192.168.5.108:2375 login -u admin -p Harbor12345 test.harbor.jtyjy.com
                     docker -H 192.168.5.108:2375 push ${env.tagname}
                 """
@@ -77,6 +77,7 @@ pipeline {
                               "targetPort": ${port}\
                             }\
                           ],\
+                          "env": {"spring.profiles.active":"${env_type}"},\
                           "projectName": "${appname}",\
                           "namespace": "${env_type}",\
                           "requestCpu": "${cpu}",\
