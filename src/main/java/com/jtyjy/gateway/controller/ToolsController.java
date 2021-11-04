@@ -1,16 +1,20 @@
 package com.jtyjy.gateway.controller;
 
 import com.jtyjy.gateway.dto.UserDTO;
+import com.jtyjy.gateway.utils.JsonUtils;
 import com.jtyjy.gateway.web.Result;
 import io.swagger.annotations.Api;
 import net.minidev.json.JSONArray;
+import org.apache.commons.codec.binary.Base64;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
+import java.nio.charset.StandardCharsets;
 import java.security.Principal;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -25,10 +29,14 @@ import java.util.stream.Stream;
 public class ToolsController {
 
     @GetMapping("/getUserJson")
-    public Result<UserDTO> getUserJson(@ApiIgnore Principal principal){
+    public Result<Map<String, Object>> getUserJson(@ApiIgnore Principal principal){
         JwtAuthenticationToken jwtAuthenticationToken = (JwtAuthenticationToken) principal;
         Map<String, Object> claims = jwtAuthenticationToken.getToken().getClaims();
-        return Result.ok(UserDTO.toUserDTO(claims));
+        Map<String, Object> map = new HashMap<>();
+        UserDTO user = UserDTO.toUserDTO(claims);
+        map.put("user", user);
+        map.put("base64", Base64.encodeBase64(JsonUtils.toJson(user).getBytes(StandardCharsets.UTF_8)));
+        return Result.ok(map);
     }
 
 }
