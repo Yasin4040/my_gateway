@@ -18,6 +18,9 @@ public class UserDTO {
     @ApiModelProperty("用户账号")
     private String account;
 
+    @ApiModelProperty("昵称")
+    private String nickname;
+
     /**
      * 用户类型
      * 企业用户：1
@@ -39,6 +42,7 @@ public class UserDTO {
         UserDTO userDTO = new UserDTO();
         userDTO.setId((Long) claims.get("id"));
         userDTO.setAccount((String) claims.get("user_name"));
+        userDTO.setNickname((String) claims.get("nickname"));
         userDTO.setUserType(claims.get("userType") != null ? ((Long) claims.get("userType")).intValue():null);
         userDTO.setToken((String) claims.get("token"));
         JSONArray scopes = (JSONArray) claims.get("scope");
