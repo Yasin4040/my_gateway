@@ -78,7 +78,7 @@ pipeline {
                               "targetPort": ${port}\
                             }\
                           ],\
-                          "env": {"spring.profiles.active":"${env_type}", "SW_AGENT_NAME":"${appname}-${env_type}", "SW_AGENT_COLLECTOR_BACKEND_SERVICES":"${swAddr}"},\
+                          "env": {"spring.profiles.active":"${env_type}", "SW_AGENT_NAMESPACE":"${env_type}", "SW_AGENT_NAME":"${appname}", "SW_AGENT_COLLECTOR_BACKEND_SERVICES":"${swAddr}"},\
                           "projectName": "${appname}",\
                           "namespace": "${env_type}",\
                           "requestCpu": "${cpu}",\
