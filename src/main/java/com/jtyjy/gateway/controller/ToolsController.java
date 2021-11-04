@@ -35,7 +35,7 @@ public class ToolsController {
         Map<String, Object> map = new HashMap<>();
         UserDTO user = UserDTO.toUserDTO(claims);
         map.put("user", user);
-        map.put("base64", Base64.encodeBase64(JsonUtils.toJson(user).getBytes(StandardCharsets.UTF_8)));
+        map.put("base64", Base64.encodeBase64String(JsonUtils.toJson(user).getBytes(StandardCharsets.UTF_8)));
         return Result.ok(map);
     }
 
