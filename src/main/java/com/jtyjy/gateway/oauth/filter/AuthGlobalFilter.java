@@ -3,6 +3,7 @@ package com.jtyjy.gateway.oauth.filter;
 import com.jtyjy.gateway.dto.UserDTO;
 import com.jtyjy.gateway.utils.JsonUtils;
 import net.minidev.json.JSONArray;
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.security.Principal;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -28,7 +31,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
 
   private final static Logger LOGGER = LoggerFactory.getLogger(AuthGlobalFilter.class);
 
-  public static final String userHead = "json-user";
+  private static final String userHead = "Authorization";
 
   @Override
   public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
@@ -40,10 +43,11 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
       Map<String, Object> claims = jwtAuthenticationToken.getToken().getClaims();
       LOGGER.info("AuthGlobalFilter.filter() user:{}", claims);
 
+      String userJson = JsonUtils.toJson(UserDTO.toUserDTO(claims));
       //将user插入header
       ServerHttpRequest request = exchange.getRequest().mutate()
               .headers(httpHeaders -> httpHeaders.remove("Authorization"))
-              .header(userHead, JsonUtils.toJson(UserDTO.toUserDTO(claims))).build();
+              .header(userHead, userJson != null ? Base64.encodeBase64String(userJson.getBytes(StandardCharsets.UTF_8)) : "").build();
       ServerWebExchange newExchange = exchange.mutate().request(request).build();
 
       return chain.filter(newExchange);
