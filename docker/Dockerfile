@@ -11,4 +11,4 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 WORKDIR /
 
-ENTRYPOINT ["java", "-jar", "jtyjy-api-gateway.jar"]
+ENTRYPOINT ["java", "-jar", "jtyjy-api-gateway.jar", "-XX:+UnlockExperimentalVMOptions", "-XX:+UseCGroupMemoryLimitForHeap"]
