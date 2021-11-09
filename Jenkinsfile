@@ -6,9 +6,9 @@ pipeline {
         choice(name: 'env_type', choices: ['dev', 'test', 'pre', 'prod', 'local'], description: '部署环境')
         string(name: 'branch', defaultValue: 'master', description: '分支')
         string(name: 'cpu', defaultValue: '200m', description: '分配cpu，默认：0.2核')
-        string(name: 'memory', defaultValue: '1024Mi', description: '分配内存，默认：512兆')
+        string(name: 'memory', defaultValue: '512Mi', description: '分配内存，默认：512兆')
         string(name: 'limitCpu', defaultValue: '2000m', description: '最大cpu，默认：1核')
-        string(name: 'limitMemory', defaultValue: '1024Mi', description: '最大内存，默认：512兆')
+        string(name: 'limitMemory', defaultValue: '512Mi', description: '最大内存，默认：512兆')
     }
 	environment {
 	    //----------需要修改的内容---------------
