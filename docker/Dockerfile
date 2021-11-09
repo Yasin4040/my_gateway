@@ -11,4 +11,4 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 WORKDIR /
 
-ENTRYPOINT ["java", "-Xms384m", "-Xmx384m", "-javaagent:/usr/local/agent/skywalking-agent.jar", "-jar", "jtyjy-api-gateway.jar"]
+ENTRYPOINT ["java", "-jar", "jtyjy-api-gateway.jar"]

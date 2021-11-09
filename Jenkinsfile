@@ -1,3 +1,5 @@
+import groovy.json.JsonOutput
+
 pipeline {
     agent any
     parameters {
@@ -64,27 +66,23 @@ pipeline {
         stage('部署') {
             steps {
                 script {
-                    data = """\
-                        {\
-                          "enableIngress": false,\
-                          "enableService": "NodePort",\
-                          "image": "${env.tagname}",\
-                          "limitCpu": "${limitCpu}",\
-                          "limitMemory": "${limitMemory}",\
-                          "portMappingList": [\
-                            {\
-                              "name": "http",\
-                              "port": ${port},\
-                              "targetPort": ${port}\
-                            }\
-                          ],\
-                          "env": {"spring.profiles.active":"${env_type}", "SW_AGENT_NAMESPACE":"${env_type}", "SW_AGENT_NAME":"${appname}", "SW_AGENT_COLLECTOR_BACKEND_SERVICES":"${swAddr}"},\
-                          "projectName": "${appname}",\
-                          "namespace": "${env_type}",\
-                          "requestCpu": "${cpu}",\
-                          "requestMemory": "${memory}"\
-                        }\
-                    """
+                    def config = [:]
+                    config.enableIngress = false
+                    config.enableService = "NodePort"
+                    config.image = "${env.tagname}"
+                    config.limitCpu = "${limitCpu}"
+                    config.limitMemory = "${limitMemory}"
+                    config.portMappingList = []
+                    config.portMappingList[0] = ["name": "http", "port": ${port}, "targetPort": ${port}]
+                    config.env = ["spring.profiles.active":"${env_type}", "SW_AGENT_NAMESPACE":"${env_type}", "SW_AGENT_NAME":"${appname}", "SW_AGENT_COLLECTOR_BACKEND_SERVICES":"${swAddr}"]
+                    config.projectName = "${appname}"
+                    config.namespace = "${env_type}"
+                    config.requestCpu = "${cpu}"
+                    config.requestMemory = "${memory}"
+                    //config.command = array 填写会覆盖docker默认的执行
+                    config.args = ["-Xms384m", "-Xmx384m", "-javaagent:/usr/local/agent/skywalking-agent.jar"]
+                    def data = JsonOutput.toJson(config);
+                    println(data)
                     sh """
                         curl -H "Content-Type:application/json" -X POST -d '${data}' 'http://192.168.5.106:31615/deploy_springboot_simple'
                     """
