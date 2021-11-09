@@ -11,4 +11,4 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 WORKDIR /
 
-ENTRYPOINT ["java"]
+ENTRYPOINT ["java", "$JAVA_OPTS", "-jar", "jtyjy-api-gateway.jar"]

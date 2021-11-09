@@ -74,13 +74,13 @@ pipeline {
                     config.limitMemory = "${limitMemory}"
                     config.portMappingList = []
                     config.portMappingList[0] = ["name": "http", "port": "${port}", "targetPort": "${port}"]
-                    config.env = ["spring.profiles.active":"${env_type}", "SW_AGENT_NAMESPACE":"${env_type}", "SW_AGENT_NAME":"${appname}", "SW_AGENT_COLLECTOR_BACKEND_SERVICES":"${swAddr}"]
+                    config.env = ["spring.profiles.active":"${env_type}", "SW_AGENT_NAMESPACE":"${env_type}", "SW_AGENT_NAME":"${appname}", "SW_AGENT_COLLECTOR_BACKEND_SERVICES":"${swAddr}", "JAVA_OPTS":"-Xms384m -Xmx384m -javaagent:/usr/local/agent/skywalking-agent.jar"]
                     config.projectName = "${appname}"
                     config.namespace = "${env_type}"
                     config.requestCpu = "${cpu}"
                     config.requestMemory = "${memory}"
                     //config.command = array 填写会覆盖docker默认的执行
-                    config.args = ["-Xms384m", "-Xmx384m", "-javaagent:/usr/local/agent/skywalking-agent.jar", "-jar", "/$jar_name"]
+                    //config.args = ["-Xms384m", "-Xmx384m", "-javaagent:/usr/local/agent/skywalking-agent.jar", "-jar", "/$jar_name"]
                     def data = JsonOutput.toJson(config);
                     println(data)
                     sh """
