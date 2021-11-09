@@ -73,7 +73,7 @@ pipeline {
                     config.limitCpu = "${limitCpu}"
                     config.limitMemory = "${limitMemory}"
                     config.portMappingList = []
-                    config.portMappingList[0] = ["name": "http", "port": ${port}, "targetPort": ${port}]
+                    config.portMappingList[0] = ["name": "http", "port": "${port}", "targetPort": "${port}"]
                     config.env = ["spring.profiles.active":"${env_type}", "SW_AGENT_NAMESPACE":"${env_type}", "SW_AGENT_NAME":"${appname}", "SW_AGENT_COLLECTOR_BACKEND_SERVICES":"${swAddr}"]
                     config.projectName = "${appname}"
                     config.namespace = "${env_type}"
