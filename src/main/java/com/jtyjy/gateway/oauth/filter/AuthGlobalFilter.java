@@ -35,13 +35,14 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
 
   @Override
   public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
+    String urlPath = exchange.getRequest().getPath().value();
     return exchange.getPrincipal().defaultIfEmpty(() -> "unknown").flatMap(principal -> {
       if("unknown".equals(principal.getName())){
         return chain.filter(exchange);
       }
       JwtAuthenticationToken jwtAuthenticationToken = (JwtAuthenticationToken) principal;
       Map<String, Object> claims = jwtAuthenticationToken.getToken().getClaims();
-      LOGGER.info("AuthGlobalFilter.filter() user:{}", claims);
+      LOGGER.info("AuthGlobalFilter.filter() path:{} user_name:{} nickname:{}", urlPath, claims.get("user_name"), claims.get("nickname"));
 
       String userJson = JsonUtils.toJson(UserDTO.toUserDTO(claims));
       //将user插入header
