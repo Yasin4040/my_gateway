@@ -46,7 +46,7 @@ spring:
       resourceserver:
         jwt:
           public-key-location: classpath:public.key
-logging:
-  level:
-    org.springframework.cloud.gateway: debug
-    org.springframework.cloud.gateway.filter: TRACE
+#logging:
+#  level:
+#    org.springframework.cloud.gateway: debug
+#    org.springframework.cloud.gateway.filter: TRACE
