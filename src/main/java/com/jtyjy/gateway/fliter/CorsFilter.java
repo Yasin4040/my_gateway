@@ -10,6 +10,7 @@ import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 处理多个跨域头问题，只返回一个，否则浏览器会报异常
@@ -32,9 +33,9 @@ public class CorsFilter implements GlobalFilter, Ordered {
                     .filter(kv -> (kv.getKey().equals(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN)
                             || kv.getKey().equals(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS)))
                     .forEach(kv -> {
-                        kv.setValue(new ArrayList<String>() {{
-                            add(kv.getValue().get(0));
-                        }});
+                        List<String> list = new ArrayList<>();
+                        list.add(kv.getValue().get(0));
+                        kv.setValue(list);
                     });
 
             return chain.filter(exchange);
