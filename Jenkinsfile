@@ -74,7 +74,7 @@ pipeline {
                     config.limitMemory = "${limitMemory}"
                     config.portMappingList = []
                     config.portMappingList[0] = ["name": "http", "port": "${port}", "targetPort": "${port}"]
-                    config.env = ["spring.profiles.active":"${env_type}", "SW_AGENT_NAMESPACE":"${env_type}", "SW_AGENT_NAME":"${appname}", "SW_AGENT_COLLECTOR_BACKEND_SERVICES":"${swAddr}", "JAVA_OPTS":"-Xms384m -Xmx384m -javaagent:/usr/local/agent/skywalking-agent.jar"]
+                    config.env = ["spring.profiles.active":"${env_type}", "SW_AGENT_NAMESPACE":"${env_type}", "SW_AGENT_NAME":"${appname}", "SW_AGENT_COLLECTOR_BACKEND_SERVICES":"${swAddr}", "JAVA_OPTS":"-Xms384m -Xmx384m -javaagent:/usr/local/agent/skywalking-agent.jar -Dskywalking.trace.ignore_path=Lettuce/INFO,/actuator/**,/actuator"]
                     config.projectName = "${appname}"
                     config.namespace = "${env_type}"
                     config.requestCpu = "${cpu}"
