@@ -1,4 +1,4 @@
-FROM test.harbor.jtyjy.com/library/oracle-jdk8:sw-arthas
+FROM test.harbor.jtyjy.com/library/oracle-jdk8:sw-arthas-1.0
 
 ADD ./jtyjy-api-gateway.jar /jtyjy-api-gateway.jar
 
