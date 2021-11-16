@@ -17,7 +17,7 @@ pipeline {
         //jar_name = "jtyjy-api-gateway.jar" //打包成功的jar包名
         //enable_service = "NodePort" //不启用填空字符串 可选 ClusterIP或NodePort
         //port="11001" //springboot的http端口
-        gitUrl = "ssh://git@192.168.4.93:222/jtyjy_mall/jtyjy-api-gateway.git" //git地址
+        //gitUrl = "ssh://git@192.168.4.93:222/jtyjy_mall/jtyjy-api-gateway.git" //git地址
         //swAddr = "192.168.5.106:30218" //skywalking 地址
         //------------------------------------
 
