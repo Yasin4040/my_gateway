@@ -40,6 +40,7 @@ pipeline {
                 //println(pomv)
                 load pwd() + "/Jenkinsfile.groovy"
                 println(env.jar_name)
+                sh 'echo "${env.jar_name}"'
 
 
                 docker_tagname = "test.harbor.jtyjy.com/library/${env.appname}:${env.version}"
@@ -55,6 +56,7 @@ pipeline {
         stage('maven构建') {
           steps {
             sh 'echo "开始maven构建"'
+            sh 'echo "${env.jar_name}"'
             sh '''
                 mvn clean install -Dmaven.test.skip=true
                 cp target/${env.jar_name} docker/
