@@ -39,9 +39,7 @@ pipeline {
                 //def pomv = project.version.toString()
                 //println(pomv)
                 load pwd() + "/Jenkinsfile.groovy"
-                println(env.swAddr)
-
-
+                //println(env.swAddr)
                 docker_tagname = "test.harbor.jtyjy.com/library/${appname}:${version}"
                 if ( env_type != 'prod' ) {
                     env.tagname = "${docker_tagname}_${env.gitVersion}"
@@ -49,6 +47,13 @@ pipeline {
                     env.tagname = "${docker_tagname}"
                 }
 
+                //添加k8s环境变量
+                env.k8sEnv = [:]
+                k8sEnv["spring.profiles.active"] = "${env_type}"
+                k8sEnv["SW_AGENT_NAMESPACE"] = "${env_type}"
+                k8sEnv["SW_AGENT_NAME"] = "${appname}"
+                k8sEnv["SW_AGENT_COLLECTOR_BACKEND_SERVICES"] = "${swAddr}"
+                k8sEnv["JAVA_OPTS"] = "${JAVA_OPTS}"
               }
             }
         }
@@ -87,7 +92,7 @@ pipeline {
                     config.limitMemory = "${limitMemory}"
                     config.portMappingList = []
                     config.portMappingList[0] = ["name": "http", "port": "${port}", "targetPort": "${port}"]
-                    config.env = ["spring.profiles.active":"${env_type}", "SW_AGENT_NAMESPACE":"${env_type}", "SW_AGENT_NAME":"${appname}", "SW_AGENT_COLLECTOR_BACKEND_SERVICES":"${swAddr}", "JAVA_OPTS":"-Xms384m -Xmx384m -javaagent:/usr/local/agent/skywalking-agent.jar -Dskywalking.trace.ignore_path=Lettuce/INFO,/actuator/**,/actuator"]
+                    config.env = env.k8sEnv
                     config.projectName = "${appname}"
                     config.namespace = "${env_type}"
                     config.requestCpu = "${cpu}"
