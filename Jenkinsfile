@@ -52,6 +52,7 @@ pipeline {
                     mvn clean install -Dmaven.test.skip=true
                     cp target/$jar_name docker/
                 '''
+                println(pwd())
                 def project = new XmlSlurper().parse(new File("pom.xml"))
                 def pomv = project.version.toString()
                 println(pomv)
