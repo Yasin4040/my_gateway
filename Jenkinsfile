@@ -28,6 +28,8 @@ pipeline {
         stage('check out source') {
             steps {
               script {
+                def repositoryUrl = scm.userRemoteConfigs[0].url
+                println(repositoryUrl)
                 git branch: "${branch}", credentialsId: 'gitlab-ssh', url: "${gitUrl}"
                 env.gitVersion = sh returnStdout: true, script: "git log --abbrev-commit --pretty=format:%h -1"
                 if ( env_type != 'prod' ) {
