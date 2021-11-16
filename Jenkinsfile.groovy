@@ -6,8 +6,8 @@ env.port = "11001"
 env.gitUrl = "ssh://git@192.168.4.93:222/jtyjy_mall/jtyjy-api-gateway.git"
 env.swAddr = "192.168.5.106:30218"
 env.JAVA_OPTS = "-Xms384m -Xmx384m -javaagent:/usr/local/agent/skywalking-agent.jar -Dskywalking.trace.ignore_path=Lettuce/INFO,/actuator/**,/actuator"
-if(env.env_type == 'dev'){
-    env.test = "12345"
-}else{
-    env.test = "22222"
-}
+//if(env.env_type == 'dev'){
+//    env.hostNetwork = "enable"
+//}else{
+//    env.hostNetwork = "disable"
+//}

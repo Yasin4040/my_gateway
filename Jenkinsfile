@@ -100,6 +100,12 @@ pipeline {
                     config.requestMemory = "${memory}"
                     //config.command = array 填写会覆盖docker默认的执行
                     //config.args = ["-Xms384m", "-Xmx384m", "-javaagent:/usr/local/agent/skywalking-agent.jar", "-jar", "/$jar_name"]
+                    //开启本地网络
+                    if ( env.hostNetwork == 'enable' ) {
+                        config.hostNetwork = true
+                        config.dnsPolicy = "ClusterFirstWithHostNet"
+                    }
+
                     def data = JsonOutput.toJson(config);
                     println(data)
                     sh """
