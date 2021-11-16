@@ -32,8 +32,8 @@ pipeline {
                 git branch: "${branch}", credentialsId: 'gitlab-ssh', url: "${gitUrl}"
                 env.gitVersion = sh returnStdout: true, script: "git log --abbrev-commit --pretty=format:%h -1"
 
-                def pom = readMavenPom file: 'pom.xml'
-                println(pom)
+                //def pom = readMavenPom file: 'pom.xml'
+                //println(pom)
                 docker_tagname = "test.harbor.jtyjy.com/library/${appname}:${version}"
                 if ( env_type != 'prod' ) {
                     env.tagname = "${docker_tagname}_${env.gitVersion}"
