@@ -17,7 +17,7 @@ pipeline {
         //jar_name = "jtyjy-api-gateway.jar" //打包成功的jar包名
         //enable_service = "NodePort" //不启用填空字符串 可选 ClusterIP或NodePort
         //port="11001" //springboot的http端口
-        gitUrl = "ssh://git@192.168.4.93:222/jtyjy_mall/jtyjy-api-gateway.git" //git地址
+        //gitUrl = "ssh://git@192.168.4.93:222/jtyjy_mall/jtyjy-api-gateway.git" //git地址
         //swAddr = "192.168.5.106:30218" //skywalking 地址
         //------------------------------------
 
@@ -29,7 +29,7 @@ pipeline {
               script {
                 def repositoryUrl = scm.userRemoteConfigs[0].url
                 println(repositoryUrl)
-                git branch: "${branch}", credentialsId: 'gitlab-ssh', url: "${gitUrl}"
+                git branch: "${branch}", credentialsId: 'gitlab-ssh', url: "${env.gitUrl}"
                 env.gitVersion = sh returnStdout: true, script: "git log --abbrev-commit --pretty=format:%h -1"
 
                 //def pom = readMavenPom file: 'pom.xml'
@@ -39,12 +39,10 @@ pipeline {
                 //def pomv = project.version.toString()
                 //println(pomv)
                 load pwd() + "/Jenkinsfile.groovy"
-                //jar_name = "${env.jar_name}"
-                println(env.jar_name)
-                sh 'echo "$jar_name"'
+                println(env.swAddr)
 
 
-                docker_tagname = "test.harbor.jtyjy.com/library/${env.appname}:${env.version}"
+                docker_tagname = "test.harbor.jtyjy.com/library/${appname}:${version}"
                 if ( env_type != 'prod' ) {
                     env.tagname = "${docker_tagname}_${env.gitVersion}"
                 }else{ //如果是生产发布版则不带git版本
@@ -57,24 +55,23 @@ pipeline {
         stage('maven构建') {
           steps {
             sh 'echo "开始maven构建"'
-            sh 'echo "${env.jar_name}"'
             sh '''
                 mvn clean install -Dmaven.test.skip=true
-                cp target/${env.jar_name} docker/
+                cp target/${jar_name} docker/
             '''
           }
         }
         stage('打包镜像') {
             steps {
                 sh 'echo "docker打包镜像"'
-                echo "${env.tagname}"
+                echo "${tagname}"
                 sh """
                     cd docker/
-                    echo ${env.jar_name}
-                    echo ${env.tagname}
-                    docker -H 192.168.5.108:2375 build --build-arg jar_name=${env.jar_name} --no-cache -t ${env.tagname} .
+                    echo ${jar_name}
+                    echo ${tagname}
+                    docker -H 192.168.5.108:2375 build --build-arg jar_name=${jar_name} --no-cache -t ${tagname} .
                     docker -H 192.168.5.108:2375 login -u admin -p Harbor12345 test.harbor.jtyjy.com
-                    docker -H 192.168.5.108:2375 push ${env.tagname}
+                    docker -H 192.168.5.108:2375 push ${tagname}
                 """
             }
         }
@@ -84,14 +81,14 @@ pipeline {
                 script {
                     def config = [:]
                     config.enableIngress = false
-                    config.enableService = "${env.enable_service}"
-                    config.image = "${env.tagname}"
+                    config.enableService = "${enable_service}"
+                    config.image = "${tagname}"
                     config.limitCpu = "${limitCpu}"
                     config.limitMemory = "${limitMemory}"
                     config.portMappingList = []
-                    config.portMappingList[0] = ["name": "http", "port": "${env.port}", "targetPort": "${env.port}"]
-                    config.env = ["spring.profiles.active":"${env_type}", "SW_AGENT_NAMESPACE":"${env_type}", "SW_AGENT_NAME":"${env.appname}", "SW_AGENT_COLLECTOR_BACKEND_SERVICES":"${env.swAddr}", "JAVA_OPTS":"-Xms384m -Xmx384m -javaagent:/usr/local/agent/skywalking-agent.jar -Dskywalking.trace.ignore_path=Lettuce/INFO,/actuator/**,/actuator"]
-                    config.projectName = "${env.appname}"
+                    config.portMappingList[0] = ["name": "http", "port": "${port}", "targetPort": "${port}"]
+                    config.env = ["spring.profiles.active":"${env_type}", "SW_AGENT_NAMESPACE":"${env_type}", "SW_AGENT_NAME":"${appname}", "SW_AGENT_COLLECTOR_BACKEND_SERVICES":"${swAddr}", "JAVA_OPTS":"-Xms384m -Xmx384m -javaagent:/usr/local/agent/skywalking-agent.jar -Dskywalking.trace.ignore_path=Lettuce/INFO,/actuator/**,/actuator"]
+                    config.projectName = "${appname}"
                     config.namespace = "${env_type}"
                     config.requestCpu = "${cpu}"
                     config.requestMemory = "${memory}"
