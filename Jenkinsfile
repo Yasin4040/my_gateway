@@ -39,7 +39,7 @@ pipeline {
                 //def pomv = project.version.toString()
                 //println(pomv)
                 load pwd() + "/Jenkinsfile.groovy"
-                println(env.swAddr)
+                println(env.jar_name)
 
 
                 docker_tagname = "test.harbor.jtyjy.com/library/${env.appname}:${env.version}"
