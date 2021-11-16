@@ -49,11 +49,11 @@ pipeline {
 
                 //添加k8s环境变量
                 env.k8sEnv = [:]
-                k8sEnv["spring.profiles.active"] = "${env_type}"
-                k8sEnv["SW_AGENT_NAMESPACE"] = "${env_type}"
-                k8sEnv["SW_AGENT_NAME"] = "${appname}"
-                k8sEnv["SW_AGENT_COLLECTOR_BACKEND_SERVICES"] = "${swAddr}"
-                k8sEnv["JAVA_OPTS"] = "${JAVA_OPTS}"
+                k8sEnv.put("spring.profiles.active", "${env_type}")
+                k8sEnv.put("SW_AGENT_NAMESPACE", "${env_type}")
+                k8sEnv.put("SW_AGENT_NAME", "${appname}")
+                k8sEnv.put("SW_AGENT_COLLECTOR_BACKEND_SERVICES", "${swAddr}")
+                k8sEnv.put("JAVA_OPTS", "${JAVA_OPTS}")
               }
             }
         }
