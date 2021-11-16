@@ -35,9 +35,9 @@ pipeline {
                 //def pom = readMavenPom file: 'pom.xml'
                 //println(pom)
 
-                def project = new XmlSlurper().parse(new File(pwd() + "/pom.xml"))
-                def pomv = project.version.toString()
-                println(pomv)
+                //def project = new XmlSlurper().parse(new File(pwd() + "/pom.xml"))
+                //def pomv = project.version.toString()
+                //println(pomv)
                 load pwd() + "/Jenkinsfile.groovy"
                 echo "${env.swAddr}"
 
