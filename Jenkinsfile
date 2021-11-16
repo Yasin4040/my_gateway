@@ -47,7 +47,7 @@ pipeline {
         stage('maven构建') {
           steps {
             script{
-                def project = new XmlSlurper().parse(new File("jtyjy-api-gateway/pom.xml"))
+                def project = new XmlSlurper().parse(new File("pom.xml"))
                 def pomv = project.version.toString()
                 println(pomv)
             }
