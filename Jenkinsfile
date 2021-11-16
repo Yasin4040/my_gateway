@@ -34,9 +34,6 @@ pipeline {
 
                 //def pom = readMavenPom file: 'pom.xml'
                 //println(pom)
-                def project = new XmlSlurper().parse(new File("jtyjy-api-gateway/pom.xml"))
-                def pomv = project.version.toString()
-                println(pomv)
                 docker_tagname = "test.harbor.jtyjy.com/library/${appname}:${version}"
                 if ( env_type != 'prod' ) {
                     env.tagname = "${docker_tagname}_${env.gitVersion}"
@@ -49,6 +46,11 @@ pipeline {
         }
         stage('maven构建') {
           steps {
+            script{
+                def project = new XmlSlurper().parse(new File("jtyjy-api-gateway/pom.xml"))
+                def pomv = project.version.toString()
+                println(pomv)
+            }
             sh 'echo "开始maven构建"'
             sh '''
                 mvn clean install -Dmaven.test.skip=true
