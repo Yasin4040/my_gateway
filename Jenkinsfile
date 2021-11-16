@@ -47,15 +47,16 @@ pipeline {
         stage('maven构建') {
           steps {
             script{
+                sh 'echo "开始maven构建"'
+                sh '''
+                    mvn clean install -Dmaven.test.skip=true
+                    cp target/$jar_name docker/
+                '''
                 def project = new XmlSlurper().parse(new File("pom.xml"))
                 def pomv = project.version.toString()
                 println(pomv)
             }
-            sh 'echo "开始maven构建"'
-            sh '''
-                mvn clean install -Dmaven.test.skip=true
-                cp target/$jar_name docker/
-            '''
+
           }
         }
         stage('打包镜像') {
