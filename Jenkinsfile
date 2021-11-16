@@ -38,6 +38,9 @@ pipeline {
                 def project = new XmlSlurper().parse(new File(pwd() + "/pom.xml"))
                 def pomv = project.version.toString()
                 println(pomv)
+                load pwd() + "/Jenkinsfile.groovy"
+                println(env.swAddr)
+
                 docker_tagname = "test.harbor.jtyjy.com/library/${appname}:${version}"
                 if ( env_type != 'prod' ) {
                     env.tagname = "${docker_tagname}_${env.gitVersion}"
