@@ -21,7 +21,6 @@ pipeline {
         swAddr = "192.168.5.106:30218" //skywalking 地址
         //------------------------------------
 
-        docker_tagname = "test.harbor.jtyjy.com/library/${appname}:${version}"
         env_type="${env_type}"
     }
     stages {
@@ -32,6 +31,10 @@ pipeline {
                 println(repositoryUrl)
                 git branch: "${branch}", credentialsId: 'gitlab-ssh', url: "${gitUrl}"
                 env.gitVersion = sh returnStdout: true, script: "git log --abbrev-commit --pretty=format:%h -1"
+
+                def pom = readMavenPom file: 'pom.xml'
+
+                docker_tagname = "test.harbor.jtyjy.com/library/${appname}:${version}"
                 if ( env_type != 'prod' ) {
                     env.tagname = "${docker_tagname}_${env.gitVersion}"
                 }else{ //如果是生产发布版则不带git版本
