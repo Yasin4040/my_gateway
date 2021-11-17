@@ -41,7 +41,7 @@ public class AuthGlobalFilter implements GlobalFilter, Ordered {
         return chain.filter(exchange);
       }
       String authStr = exchange.getRequest().getHeaders().getFirst(USER_HEAD);
-      if(StringUtils.isBlank(authStr) || !authStr.startsWith("Bearer")){
+      if(StringUtils.isBlank(authStr) || !authStr.toLowerCase().startsWith("bearer")){
         return chain.filter(exchange);
       }
       JwtAuthenticationToken jwtAuthenticationToken = (JwtAuthenticationToken) principal;
