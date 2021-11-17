@@ -11,6 +11,8 @@ import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * 处理多个跨域头问题，只返回一个，否则浏览器会报异常
@@ -28,7 +30,17 @@ public class CorsFilter implements GlobalFilter, Ordered {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         return chain.filter(exchange).then(Mono.defer(() -> {
-            exchange.getResponse().getHeaders().entrySet().stream()
+            HttpHeaders headers = exchange.getResponse().getHeaders();
+            headers.computeIfAbsent(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, key -> Stream.of("*").collect(Collectors.toList()));
+            headers.computeIfAbsent(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, key -> Stream.of("*").collect(Collectors.toList()));
+            headers.computeIfAbsent(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, key -> Stream.of("*").collect(Collectors.toList()));
+            List<String> vary = headers.computeIfAbsent(HttpHeaders.VARY, key -> Stream.of("Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers").collect(Collectors.toList()));
+            if(!vary.contains("Origin")){
+                vary.add("Origin");
+                vary.add("Access-Control-Request-Method");
+                vary.add("Access-Control-Request-Headers");
+            }
+            /*exchange.getResponse().getHeaders().entrySet().stream()
                     .filter(kv -> (kv.getValue() != null && kv.getValue().size() > 1))
                     .filter(kv -> (kv.getKey().equals(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN)
                             || kv.getKey().equals(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS)))
@@ -36,7 +48,7 @@ public class CorsFilter implements GlobalFilter, Ordered {
                         List<String> list = new ArrayList<>();
                         list.add(kv.getValue().get(0));
                         kv.setValue(list);
-                    });
+                    });*/
 
             return chain.filter(exchange);
         }));
