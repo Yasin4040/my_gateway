@@ -1,6 +1,6 @@
 //env.appname = "jtyjy-api-gateway"
 //env.version="1.0-SNAPSHOT"
-env.jar_path = "jtyjy-user-web/target/jtyjy-api-gateway.jar"
+env.jar_path = "target/jtyjy-api-gateway.jar"
 env.enable_service = "NodePort"
 env.port = "11001"
 //env.gitUrl = "ssh://git@192.168.4.93:222/jtyjy_mall/jtyjy-api-gateway.git"
