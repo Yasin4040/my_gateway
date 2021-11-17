@@ -34,6 +34,7 @@ public class CorsFilter implements GlobalFilter, Ordered {
             headers.computeIfAbsent(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN, key -> Stream.of("*").collect(Collectors.toList()));
             headers.computeIfAbsent(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS, key -> Stream.of("*").collect(Collectors.toList()));
             headers.computeIfAbsent(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, key -> Stream.of("*").collect(Collectors.toList()));
+            headers.computeIfAbsent(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS, key -> Stream.of("true").collect(Collectors.toList()));
             List<String> vary = headers.computeIfAbsent(HttpHeaders.VARY, key -> Stream.of("Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers").collect(Collectors.toList()));
             if(!vary.contains("Origin")){
                 vary.add("Origin");
