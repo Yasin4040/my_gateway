@@ -7,9 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
 import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.server.util.matcher.ServerWebExchangeMatcher;
+import org.springframework.web.cors.reactive.CorsUtils;
+import org.springframework.web.server.ServerWebExchange;
 
 /**
  * 授权配置
@@ -31,6 +35,7 @@ public class ResourceSecurityConfig {
                 .matchers(EndpointRequest.toAnyEndpoint()).permitAll()
                 // SCOPE_ 前缀对应认证服务器的客户端 scopes(...) 配置
                 //.pathMatchers("/api").hasAuthority("SCOPE_api")
+                .pathMatchers(HttpMethod.OPTIONS).permitAll()
                 .pathMatchers("/v2/**", "/v3/**", "/swagger-resources/**",
                         "/doc.html", "/webjars/**", "/auth/user/**", "/auth/emp/**").permitAll() //白名单
                 //.pathMatchers("/*.js").authenticated()
@@ -41,9 +46,11 @@ public class ResourceSecurityConfig {
                 .accessDeniedHandler(restfulAccessDeniedHandler) // 处理未授权
                 .authenticationEntryPoint(restAuthenticationEntryPoint) // 处理未认证
                 .and()
+                .cors().and()
                 .csrf().disable()
                 .oauth2ResourceServer()
                 .jwt();
+
         return http.build();
     }
 
