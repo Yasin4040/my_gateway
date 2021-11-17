@@ -46,7 +46,6 @@ public class ResourceSecurityConfig {
                 .accessDeniedHandler(restfulAccessDeniedHandler) // 处理未授权
                 .authenticationEntryPoint(restAuthenticationEntryPoint) // 处理未认证
                 .and()
-                .cors().and()
                 .csrf().disable()
                 .oauth2ResourceServer()
                 .jwt();

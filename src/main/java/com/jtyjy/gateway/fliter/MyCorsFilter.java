@@ -31,13 +31,17 @@ public class MyCorsFilter implements GlobalFilter, Ordered {
 
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
-        //过滤掉服务转发中携带的跨域头，会在网关拦截器中重新添加
-        HttpHeaders headers = exchange.getResponse().getHeaders();
-        headers.remove(HttpHeaders.VARY);
-        headers.remove(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN);
-        headers.remove(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS);
-        headers.remove(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS);
-        headers.remove(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS);
-        return chain.filter(exchange);
+        return chain.filter(exchange).then(Mono.defer(() -> {
+            exchange.getResponse().getHeaders().entrySet().stream()
+                    .filter(kv -> (kv.getValue() != null && kv.getValue().size() > 1))
+                    .filter(kv -> (kv.getKey().equals(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN)
+                            || kv.getKey().equals(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS)))
+                    .forEach(kv -> {
+                        List<String> list = new ArrayList<>();
+                        list.add(kv.getValue().get(0));
+                        kv.setValue(list);
+                    });
+            return chain.filter(exchange);
+        }));
     }
 }
