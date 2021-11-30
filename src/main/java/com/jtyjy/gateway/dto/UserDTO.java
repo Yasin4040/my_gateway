@@ -40,7 +40,7 @@ public class UserDTO {
 
     public static UserDTO toUserDTO(Map<String, Object> claims){
         UserDTO userDTO = new UserDTO();
-        userDTO.setId((Long) claims.get("id"));
+        userDTO.setId(Long.valueOf(claims.get("id").toString()));
         userDTO.setAccount((String) claims.get("user_name"));
         userDTO.setNickname((String) claims.get("nickname"));
         userDTO.setUserType(claims.get("userType") != null ? ((Long) claims.get("userType")).intValue():null);
