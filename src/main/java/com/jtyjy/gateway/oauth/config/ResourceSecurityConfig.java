@@ -41,7 +41,7 @@ public class ResourceSecurityConfig {
                 //.pathMatchers("/api").hasAuthority("SCOPE_api")
                 .pathMatchers(HttpMethod.OPTIONS).permitAll()
                 .pathMatchers("/v2/**", "/v3/**", "/swagger-resources/**",
-                        "/doc.html", "/webjars/**", "/auth/user/**", "/auth/emp/**", "/mall/order/backstage/exportOrders", "mall/order/personal/call").permitAll() //白名单
+                        "/doc.html", "/webjars/**", "/auth/user/**", "/auth/emp/**", "/mall/order/backstage/exportOrders", "/mall/order/personal/call").permitAll() //白名单
                 //.pathMatchers("/*.js").authenticated()
                 //.anyExchange().permitAll()
                 .anyExchange().authenticated() //默认的鉴权管理
