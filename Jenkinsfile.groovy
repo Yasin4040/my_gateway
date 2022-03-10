@@ -13,4 +13,4 @@ if(env.env_type == 'local'){
     env.JAVA_OPTS = "-Xms384m -Xmx384m -javaagent:/usr/local/agent/skywalking-agent.jar -Dskywalking.trace.ignore_path=Lettuce/INFO,/actuator/**,/actuator"
 }
 //env.hostNetwork = "enable" //开启本地网络
-env.checkHealth = true
+env.checkHealth = "true"
