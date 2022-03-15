@@ -43,7 +43,7 @@ public class ResourceSecurityConfig {
                 //白名单
                 .pathMatchers("/v2/**", "/v3/**", "/swagger-resources/**",
                         "/doc.html", "/webjars/**", "/auth/user/**", "/auth/emp/**", "/mall/order/backstage/exportOrders",
-                        "/mall/order/personal/call", "/mall/order/refund/backend/call").permitAll()
+                        "/mall/order/personal/call", "/mall/order/refund/backend/call", "/mall/order/groupOrder/business/exportOrders", "/mall/order/traditionalOrder/backend/exportPayOrders").permitAll()
                 //.pathMatchers("/*.js").authenticated()
                 //.anyExchange().permitAll()
                 .anyExchange().authenticated() //默认的鉴权管理
