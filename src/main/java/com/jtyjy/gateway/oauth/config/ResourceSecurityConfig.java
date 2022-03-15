@@ -5,6 +5,7 @@ import com.jtyjy.gateway.oauth.handler.RestAuthenticationEntryPoint;
 import com.jtyjy.gateway.oauth.handler.RestfulAccessDeniedHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.actuate.autoconfigure.security.reactive.EndpointRequest;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -30,6 +31,8 @@ public class ResourceSecurityConfig {
     private RestfulAccessDeniedHandler restfulAccessDeniedHandler;
     @Autowired
     private CorsWebFilter corsWebFilter;
+    @Autowired
+    private ApplicationContext applicationContext;
 
     @Bean
     public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
@@ -41,13 +44,13 @@ public class ResourceSecurityConfig {
                 //.pathMatchers("/api").hasAuthority("SCOPE_api")
                 .pathMatchers(HttpMethod.OPTIONS).permitAll()
                 //白名单
-                .pathMatchers("/v2/**", "/v3/**", "/swagger-resources/**",
-                        "/doc.html", "/webjars/**", "/auth/user/**", "/auth/emp/**", "/mall/order/backstage/exportOrders",
-                        "/mall/order/personal/call", "/mall/order/refund/backend/call", "/mall/order/groupOrder/business/exportOrders", "/mall/order/traditionalOrder/backend/exportPayOrders").permitAll()
+//                .pathMatchers("/v2/**", "/v3/**", "/swagger-resources/**",
+//                        "/doc.html", "/webjars/**", "/auth/user/**", "/auth/emp/**", "/mall/order/backstage/exportOrders",
+//                        "/mall/order/personal/call", "/mall/order/refund/backend/call", "/mall/order/groupOrder/business/exportOrders", "/mall/order/traditionalOrder/backend/exportPayOrders").permitAll()
                 //.pathMatchers("/*.js").authenticated()
                 //.anyExchange().permitAll()
-                .anyExchange().authenticated() //默认的鉴权管理
-                //.anyExchange().access(new AuthorizationManager()) // 自定义鉴权管理器配置
+                //.anyExchange().authenticated() //默认的鉴权管理
+                .anyExchange().access(new AuthorizationManager(applicationContext)) // 自定义鉴权管理器配置
                 .and().exceptionHandling()
                 // 处理未授权
                 .accessDeniedHandler(restfulAccessDeniedHandler)
