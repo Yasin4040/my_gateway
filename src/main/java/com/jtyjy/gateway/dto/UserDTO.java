@@ -34,6 +34,10 @@ public class UserDTO {
 
     @ApiModelProperty("用户拥有的权限")
     private List<String> authorities;
+    /**
+     * 资源
+     */
+    private List<String> resources;
 
     @ApiModelProperty("oauth原始token")
     private String token;
@@ -47,11 +51,15 @@ public class UserDTO {
         userDTO.setToken((String) claims.get("token"));
         JSONArray scopes = (JSONArray) claims.get("scope");
         JSONArray authorities = (JSONArray) claims.get("authorities");
+        JSONArray resources = (JSONArray) claims.get("resources");
         if(scopes != null) {
             userDTO.setScopes(Stream.of(scopes.toArray()).map(s -> (String) s).collect(Collectors.toList()));
         }
         if(authorities != null) {
             userDTO.setAuthorities(Stream.of(authorities.toArray()).map(s -> (String) s).collect(Collectors.toList()));
+        }
+        if (resources != null) {
+            userDTO.setResources(Stream.of(resources.toArray()).map(s -> (String) s).collect(Collectors.toList()));
         }
         return userDTO;
     }
