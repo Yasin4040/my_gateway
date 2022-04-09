@@ -50,3 +50,5 @@ spring:
 #  level:
 #    org.springframework.cloud.gateway: debug
 #    org.springframework.cloud.gateway.filter: TRACE
+wechat:
+  validate-text: Opcld7AocIGq70AI
