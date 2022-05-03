@@ -38,6 +38,9 @@ spring:
         locator:
           enabled: true
     nacos:
+      config:
+        server-addr: 192.168.5.106:31559
+        file-extension: yml
       discovery:
         server-addr: 192.168.5.106:31559
         group: ${spring.profiles.active}
