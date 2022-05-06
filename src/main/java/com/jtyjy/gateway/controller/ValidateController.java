@@ -18,8 +18,15 @@ public class ValidateController {
     @Value("${wechat.validate-text}")
     private String validateText;
 
+
     @GetMapping("/WW_verify_Opcld7AocIGq70AI.txt")
-    public Mono<String> validateText() {
+    public Mono<String> validateTextTest() {
+        return Mono.just(validateText);
+    }
+
+
+    @GetMapping("/WW_verify_t3kRri2gJL8aLmVd.txt")
+    public Mono<String> validateTextProd() {
         return Mono.just(validateText);
     }
 
