@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Service
 public class WhiteListServiceImpl extends ServiceImpl<WhiteListMapper, WhiteList> implements WhiteListService {
 
-    private volatile List<String> pathList = null;
+    private List<String> pathList = null;
 
     @Override
     public List<String> getPathList() {
