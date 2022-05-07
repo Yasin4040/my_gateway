@@ -21,18 +21,20 @@ import java.util.stream.Collectors;
 @Service
 public class WhiteListServiceImpl extends ServiceImpl<WhiteListMapper, WhiteList> implements WhiteListService {
 
-    private List<String> pathList = null;
+    private volatile List<String> pathList = null;
 
     @Override
     public List<String> getPathList() {
-        if(pathList == null) {
+        List<String> localPathList = pathList;
+        if(localPathList == null) {
             synchronized (this) {
-                if(pathList == null) {
-                    pathList = list().stream().map(WhiteList::getPath).collect(Collectors.toList());
+                localPathList = pathList;
+                if(localPathList == null) {
+                    pathList = localPathList = list().stream().map(WhiteList::getPath).collect(Collectors.toList());
                 }
             }
         }
-        return pathList;
+        return localPathList;
     }
 
     @Override
