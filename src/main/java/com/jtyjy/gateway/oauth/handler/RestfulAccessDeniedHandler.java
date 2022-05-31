@@ -24,7 +24,7 @@ public class RestfulAccessDeniedHandler implements ServerAccessDeniedHandler {
   @Override
   public Mono<Void> handle(ServerWebExchange exchange, AccessDeniedException denied) {
     ServerHttpResponse response = exchange.getResponse();
-    response.setStatusCode(HttpStatus.FORBIDDEN);
+    response.setStatusCode(HttpStatus.OK);
     response.getHeaders().add(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
     String body = JsonUtils.toJson(Result.failure(ResultCode.FORBIDDEN.getCode(), denied.getMessage()));
     DataBuffer buffer = response.bufferFactory().wrap(body.getBytes(StandardCharsets.UTF_8));
