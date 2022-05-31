@@ -1,24 +1,20 @@
 package com.jtyjy.gateway.oauth;
 
 import com.jtyjy.gateway.service.WhiteListService;
-import net.minidev.json.JSONArray;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.context.ApplicationContext;
+import org.springframework.core.env.Environment;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
-import org.springframework.security.authorization.AuthenticatedReactiveAuthorizationManager;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.ReactiveAuthorizationManager;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.security.web.server.authorization.AuthorizationContext;
-import org.springframework.stereotype.Component;
 import org.springframework.util.AntPathMatcher;
 import reactor.core.publisher.Mono;
 
-import java.net.URI;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 自定义鉴权管理器
@@ -31,9 +27,12 @@ public class AuthorizationManager implements ReactiveAuthorizationManager<Author
     private final AntPathMatcher antPathMatcher = new AntPathMatcher();
 
     private final WhiteListService whiteListService;
+    private final String env;
 
     public AuthorizationManager(ApplicationContext applicationContext){
         whiteListService = applicationContext.getBean(WhiteListService.class);
+        Environment environment = applicationContext.getEnvironment();
+        env = environment.getProperty("spring.profiles.active");
     }
 
 //    @Override
@@ -74,7 +73,9 @@ public class AuthorizationManager implements ReactiveAuthorizationManager<Author
                 return Mono.just(new AuthorizationDecision(true));
             }
         }
-        return authentication.filter(this::isNotAnonymous).map(this::getAuthorizationDecision)
+        return authentication.filter(this::isNotAnonymous)
+                .filter(this::hasResourceId)
+                .map(this::getAuthorizationDecision)
                 .defaultIfEmpty(new AuthorizationDecision(false));
     }
 
@@ -90,6 +91,17 @@ public class AuthorizationManager implements ReactiveAuthorizationManager<Author
      */
     private boolean isNotAnonymous(Authentication authentication) {
         return !this.authTrustResolver.isAnonymous(authentication);
+    }
+
+    private boolean hasResourceId(Authentication authentication) {
+        if (authentication instanceof JwtAuthenticationToken) {
+            JwtAuthenticationToken jwtAuthenticationToken = (JwtAuthenticationToken) authentication;
+            List<String> aud = (List<String>) jwtAuthenticationToken.getTokenAttributes().get("aud");
+            if (CollectionUtils.isNotEmpty(aud)) {
+                return aud.contains(env);
+            }
+        }
+        return false;
     }
 
 }
