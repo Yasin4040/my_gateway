@@ -1,7 +1,7 @@
 package com.jtyjy.gateway.repository.mapper;
 
-import com.jtyjy.gateway.repository.model.GatewayRoute;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.jtyjy.gateway.repository.model.GatewayRoute;
 
 /**
  * <p>
@@ -12,5 +12,4 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  * @since 2021-09-24
  */
 public interface GatewayRouteMapper extends BaseMapper<GatewayRoute> {
-
 }

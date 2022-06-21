@@ -1,15 +1,16 @@
 package com.jtyjy.gateway.controller;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jtyjy.gateway.dto.PageBody;
+import com.jtyjy.gateway.query.WhiteListQuery;
 import com.jtyjy.gateway.repository.model.WhiteList;
 import com.jtyjy.gateway.service.WhiteListService;
 import com.jtyjy.gateway.web.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -22,10 +23,16 @@ import java.util.Map;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/gateway/permit")
-@Api(tags = "无需认证的工具")
+@Api(tags = "白名单管理 无需认证的工具 ")
 public class PermitController {
 
     private final WhiteListService whiteListService;
+    @PostMapping("/selectWhiteListPageVo")
+    @ApiOperation(value = "分页查询白名单")
+    public Result<PageBody<WhiteList>> selectWhiteListPageVo(@Validated @RequestBody WhiteListQuery query){
+        Page<WhiteList> whiteListPage = whiteListService.selectWhiteListPageVo(query);
+        return Result.ok(new PageBody(whiteListPage));
+    }
 
     @GetMapping("/getWhiteList")
     @ApiOperation(value = "获取白名单")

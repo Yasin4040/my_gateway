@@ -9,17 +9,12 @@
         <result column="uri" property="uri" />
         <result column="predicates" property="predicates" />
         <result column="filters" property="filters" />
-        <result column="order_" property="order" />
+        <result column="order_" property="sort" />
         <result column="create_by" property="createBy" />
         <result column="create_time" property="createTime" />
         <result column="update_by" property="updateBy" />
         <result column="update_time" property="updateTime" />
         <result column="remarks" property="remarks" />
     </resultMap>
-
-    <!-- 通用查询结果列 -->
-    <sql id="Base_Column_List">
-        id, service_id, uri, predicates, filters, order_, create_by, create_time, update_by, update_time, remarks
-    </sql>
 
 </mapper>

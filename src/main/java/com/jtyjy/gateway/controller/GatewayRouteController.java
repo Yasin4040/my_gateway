@@ -1,7 +1,11 @@
 package com.jtyjy.gateway.controller;
 
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jtyjy.gateway.dto.PageBody;
 import com.jtyjy.gateway.dto.RouteDTO;
+import com.jtyjy.gateway.query.RouteQuery;
+import com.jtyjy.gateway.vo.RouteVO;
 import com.jtyjy.gateway.web.Result;
 import com.jtyjy.gateway.service.GatewayRouteService;
 import io.swagger.annotations.Api;
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.security.Principal;
+import java.util.List;
 
 /**
  * <p>
@@ -32,6 +37,13 @@ public class GatewayRouteController {
 
     @Autowired
     private GatewayRouteService gatewayRouteService;
+
+    @PostMapping("/selectRoutePageVo")
+    @ApiOperation(value = "分页查询路由")
+    public Result<PageBody<RouteVO>> selectRoutePageVo(@Validated @RequestBody RouteQuery query){
+        Page<RouteVO> routePage = gatewayRouteService.selectRoutePageVo(query);
+        return Result.ok(new PageBody(routePage));
+    }
 
     @PostMapping("/addRoute")
     @ApiOperation(value = "添加路由")

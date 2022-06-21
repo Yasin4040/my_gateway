@@ -1,5 +1,7 @@
 package com.jtyjy.gateway.service;
 
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jtyjy.gateway.query.WhiteListQuery;
 import com.jtyjy.gateway.repository.model.WhiteList;
 import com.baomidou.mybatisplus.extension.service.IService;
 
@@ -19,4 +21,5 @@ public interface WhiteListService extends IService<WhiteList> {
 
     void refreshPathList();
 
+    Page<WhiteList> selectWhiteListPageVo(WhiteListQuery query);
 }
