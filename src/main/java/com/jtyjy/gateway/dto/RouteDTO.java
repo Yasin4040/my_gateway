@@ -28,4 +28,7 @@ public class RouteDTO {
     @ApiModelProperty(value = "排序")
     private int order;
 
+    @ApiModelProperty(value = "备注信息")
+    private String remarks;
+
 }

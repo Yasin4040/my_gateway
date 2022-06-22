@@ -13,7 +13,7 @@ import java.util.Date;
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value="GatewayRoute对象", description="网关路由表")
 public class RouteVO {
-
+    private Long id;
     @ApiModelProperty(value = "服务id")
     private String serviceId;
 

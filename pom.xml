@@ -55,6 +55,12 @@
     <dependencies>
         <!-- 监控 -->
         <dependency>
+            <groupId>com.jtyjy.basic</groupId>
+            <artifactId>jtyjy-common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <!-- 监控 -->
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>

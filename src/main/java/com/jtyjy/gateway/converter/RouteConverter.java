@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jtyjy.gateway.repository.model.GatewayRoute;
 import com.jtyjy.gateway.vo.RouteVO;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.ReportingPolicy;
 import org.mapstruct.factory.Mappers;
 
@@ -25,6 +26,7 @@ public interface RouteConverter {
     * @param route 实体 转换DTO
     * @return  RouteVO
     */
+    @Mapping(target = "id",source = "id")
     RouteVO toRouteVO(GatewayRoute route);
     /**
      * 转换实体list

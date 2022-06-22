@@ -27,11 +27,11 @@ import java.util.Map;
 public class PermitController {
 
     private final WhiteListService whiteListService;
-    @PostMapping("/selectWhiteListPageVo")
+    @GetMapping("/selectWhiteListPageVo")
     @ApiOperation(value = "分页查询白名单")
-    public Result<PageBody<WhiteList>> selectWhiteListPageVo(@Validated @RequestBody WhiteListQuery query){
+    public com.jtyjy.basic.common.web.Result<PageBody<WhiteList>> selectWhiteListPageVo(@Validated @ModelAttribute WhiteListQuery query){
         Page<WhiteList> whiteListPage = whiteListService.selectWhiteListPageVo(query);
-        return Result.ok(new PageBody(whiteListPage));
+        return  com.jtyjy.basic.common.web.Result.ok(new PageBody(whiteListPage));
     }
 
     @GetMapping("/getWhiteList")

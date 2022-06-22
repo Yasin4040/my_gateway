@@ -6,21 +6,17 @@ import com.jtyjy.gateway.dto.PageBody;
 import com.jtyjy.gateway.dto.RouteDTO;
 import com.jtyjy.gateway.query.RouteQuery;
 import com.jtyjy.gateway.vo.RouteVO;
-import com.jtyjy.gateway.web.Result;
+import com.jtyjy.basic.common.web.Result;
 import com.jtyjy.gateway.service.GatewayRouteService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.security.Principal;
-import java.util.List;
 
 /**
  * <p>
@@ -38,9 +34,9 @@ public class GatewayRouteController {
     @Autowired
     private GatewayRouteService gatewayRouteService;
 
-    @PostMapping("/selectRoutePageVo")
+    @GetMapping("/selectRoutePageVo")
     @ApiOperation(value = "分页查询路由")
-    public Result<PageBody<RouteVO>> selectRoutePageVo(@Validated @RequestBody RouteQuery query){
+    public Result<PageBody<RouteVO>> selectRoutePageVo(@Validated @ModelAttribute RouteQuery query){
         Page<RouteVO> routePage = gatewayRouteService.selectRoutePageVo(query);
         return Result.ok(new PageBody(routePage));
     }
