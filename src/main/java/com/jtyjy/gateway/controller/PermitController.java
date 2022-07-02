@@ -5,7 +5,7 @@ import com.jtyjy.gateway.dto.PageBody;
 import com.jtyjy.gateway.query.WhiteListQuery;
 import com.jtyjy.gateway.repository.model.WhiteList;
 import com.jtyjy.gateway.service.WhiteListService;
-import com.jtyjy.gateway.web.Result;
+import com.jtyjy.basic.common.web.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +29,9 @@ public class PermitController {
     private final WhiteListService whiteListService;
     @GetMapping("/selectWhiteListPageVo")
     @ApiOperation(value = "分页查询白名单")
-    public com.jtyjy.basic.common.web.Result<PageBody<WhiteList>> selectWhiteListPageVo(@Validated @ModelAttribute WhiteListQuery query){
+    public Result<PageBody<WhiteList>> selectWhiteListPageVo(@Validated @ModelAttribute WhiteListQuery query){
         Page<WhiteList> whiteListPage = whiteListService.selectWhiteListPageVo(query);
-        return  com.jtyjy.basic.common.web.Result.ok(new PageBody(whiteListPage));
+        return  Result.ok(new PageBody(whiteListPage));
     }
 
     @GetMapping("/getWhiteList")
@@ -42,7 +42,7 @@ public class PermitController {
 
     @PostMapping("/addWhiteList")
     @ApiOperation(value = "添加白名单")
-    public Result<Void> addWhiteList(WhiteList whiteList){
+    public Result<Void> addWhiteList(@RequestBody WhiteList whiteList){
         whiteListService.save(whiteList);
         return Result.ok();
     }

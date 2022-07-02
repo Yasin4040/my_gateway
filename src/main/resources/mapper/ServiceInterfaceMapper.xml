@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jtyjy.gateway.repository.mapper.ServiceInterfaceMapper">
+
+    <resultMap id="BaseResultMap" type="com.jtyjy.gateway.repository.model.ServiceInterface">
+            <id property="id" column="id" jdbcType="BIGINT"/>
+            <result property="serviceId" column="service_id" jdbcType="BIGINT"/>
+            <result property="serviceUrl" column="service_url" jdbcType="VARCHAR"/>
+            <result property="path" column="path" jdbcType="VARCHAR"/>
+            <result property="summary" column="summary" jdbcType="VARCHAR"/>
+            <result property="type" column="type" jdbcType="VARCHAR"/>
+            <result property="tag" column="tag" jdbcType="VARCHAR"/>
+    </resultMap>
+
+</mapper>
