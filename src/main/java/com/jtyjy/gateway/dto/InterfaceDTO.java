@@ -10,10 +10,10 @@ import lombok.Data;
  */
 @Data
 public class InterfaceDTO {
-    @ApiModelProperty(name = "服务名")
-    private String serviceId;
-    @ApiModelProperty(name = "服务名url lb:")
-    private String serviceUrl;
+//    @ApiModelProperty(name = "服务名")
+//    private String serviceId;
+//    @ApiModelProperty(name = "服务名url lb:")
+//    private String serviceUrl;
     @ApiModelProperty(name = "请求路径")
     private String path;
     @ApiModelProperty(name = "请求名称")

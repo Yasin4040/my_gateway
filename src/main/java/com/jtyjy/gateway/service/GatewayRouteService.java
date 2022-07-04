@@ -38,5 +38,7 @@ public interface GatewayRouteService extends IService<GatewayRoute> {
 
     List<InterfaceDTO> getAllInterface(Long id);
 
+    List<InterfaceDTO> mapToInterfaceDTO(String result);
+
     void dealInterface(Long id);
 }

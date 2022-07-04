@@ -4,6 +4,7 @@ import com.jtyjy.gateway.service.WhiteListService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.context.ApplicationContext;
 import org.springframework.core.env.Environment;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.authentication.AuthenticationTrustResolver;
 import org.springframework.security.authentication.AuthenticationTrustResolverImpl;
 import org.springframework.security.authorization.AuthorizationDecision;
@@ -67,7 +68,17 @@ public class AuthorizationManager implements ReactiveAuthorizationManager<Author
 
     @Override
     public Mono<AuthorizationDecision> check(Mono<Authentication> authentication, AuthorizationContext authorizationContext) {
-        String path = authorizationContext.getExchange().getRequest().getPath().value();
+        ServerHttpRequest request = authorizationContext.getExchange().getRequest();
+        String path = request.getPath().value();
+        String ip = request.getRemoteAddress().getAddress().getHostAddress();
+        //白名单 通过。
+        for (String p : whiteListService.getPathList()){
+            if(antPathMatcher.match(p, path)){
+                return Mono.just(new AuthorizationDecision(true));
+            }
+        }
+        //增加黑名单 ip 限制。
+        //白名单 通过。
         for (String p : whiteListService.getPathList()){
             if(antPathMatcher.match(p, path)){
                 return Mono.just(new AuthorizationDecision(true));

@@ -134,8 +134,8 @@ public class GatewayRouteServiceImpl extends ServiceImpl<GatewayRouteMapper, Gat
         for (String p : pathSet) {
             InterfaceDTO dto = new InterfaceDTO();
             dto.setPath(p);
-            dto.setServiceUrl(gatewayRoute.getUri());
-            dto.setServiceId(gatewayRoute.getServiceId());
+//            dto.setServiceUrl(gatewayRoute.getUri());
+//            dto.setServiceId(gatewayRoute.getServiceId());
             //当前对象
             //当前key对应的值
             String pathValue = getJsonValue(path, p);
@@ -151,6 +151,39 @@ public class GatewayRouteServiceImpl extends ServiceImpl<GatewayRouteMapper, Gat
             dto.setSummary(summary);
             interfaceDTOList.add(dto);
         }
+    }
+
+
+
+    @Override
+    public  List<InterfaceDTO> mapToInterfaceDTO(String result){
+        List<InterfaceDTO> faces = new ArrayList<>();
+        String path = getJsonValue(result, "paths");
+        if(StringUtils.isBlank(path) ){
+            return null;
+        }
+        Set<String> pathSet = getKeySet(path);
+        for (String p : pathSet) {
+            InterfaceDTO dto = new InterfaceDTO();
+            dto.setPath(p);
+//            dto.setServiceUrl(gatewayRoute.getUri());
+//            dto.setServiceId(gatewayRoute.getServiceId());
+            //当前对象
+            //当前key对应的值
+            String pathValue = getJsonValue(path, p);
+
+            String type = getKeySet(pathValue).stream().findFirst().get();
+
+            dto.setType(type);
+
+            String typeValue = getJsonValue(pathValue, type);
+            String tag = getJsonValue(typeValue, "tags");
+            dto.setTag(tag);
+            String summary = getJsonValue(typeValue, "summary");
+            dto.setSummary(summary);
+            faces.add(dto);
+        }
+        return faces;
     }
     @Override
     public void dealInterface(Long id) {

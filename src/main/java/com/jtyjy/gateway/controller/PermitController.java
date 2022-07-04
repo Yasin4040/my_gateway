@@ -1,11 +1,12 @@
 package com.jtyjy.gateway.controller;
 
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jtyjy.basic.common.web.Result;
 import com.jtyjy.gateway.dto.PageBody;
 import com.jtyjy.gateway.query.WhiteListQuery;
 import com.jtyjy.gateway.repository.model.WhiteList;
 import com.jtyjy.gateway.service.WhiteListService;
-import com.jtyjy.basic.common.web.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +47,15 @@ public class PermitController {
         whiteListService.save(whiteList);
         return Result.ok();
     }
+
+
+    @PostMapping("/editWhiteList")
+    @ApiOperation(value = "编辑白名单")
+    public Result<Void> editWhiteList(@RequestBody WhiteList whiteList){
+        whiteListService.update(whiteList,new UpdateWrapper<WhiteList>().lambda().eq(WhiteList::getId,whiteList.getId()));
+        return Result.ok();
+    }
+
 
     @PostMapping("/delWhiteList")
     @ApiOperation(value = "删除白名单")

@@ -44,13 +44,18 @@ public class PageBody<T> implements Iterable<T>, Serializable {
         this(page.getTotal(), page.getPages(), page.getPageSize(), page.getPageNum(), page.getList());
     }
 
+//    /**
+//     * 兼容 pageHelper的pageInfo
+//     */
+//    public PageBody(List<T> list){
+//        this(new PageInfo<>(list));
+//    }
     /**
-     * 兼容 pageHelper的pageInfo
+     * 兼容 pageHelper的pageInfo  前端适配 简单使用
      */
     public PageBody(List<T> list){
-        this(new PageInfo<>(list));
+     this((long)list.size(),20,20,1,list);
     }
-
     /**
      * 兼容 mybatisPlus的page
      */

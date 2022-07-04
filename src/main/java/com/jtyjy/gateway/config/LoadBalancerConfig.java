@@ -14,8 +14,8 @@ import org.springframework.core.annotation.Order;
  * Created by ZiYao Lee on 2022/07/02.
  * Time: 16:00
  */
-@Configuration
-@Order(-1)
+//@Configuration
+//@Order(-1)
 public class LoadBalancerConfig {
     @Autowired
     private LoadBalancerClientFactory loadBalancerClientFactory;
