@@ -8,15 +8,12 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.jtyjy.gateway.config.RedisListenerConfig;
 import com.jtyjy.gateway.converter.RouteConverter;
-import com.jtyjy.gateway.converter.ServiceInterfaceConverter;
 import com.jtyjy.gateway.dto.InterfaceDTO;
 import com.jtyjy.gateway.dto.RouteDTO;
 import com.jtyjy.gateway.query.RouteQuery;
 import com.jtyjy.gateway.repository.mapper.GatewayRouteMapper;
 import com.jtyjy.gateway.repository.model.GatewayRoute;
-import com.jtyjy.gateway.repository.model.ServiceInterface;
 import com.jtyjy.gateway.service.GatewayRouteService;
-import com.jtyjy.gateway.service.ServiceInterfaceService;
 import com.jtyjy.gateway.utils.JsonUtils;
 import com.jtyjy.gateway.vo.RouteVO;
 import org.apache.commons.lang3.StringUtils;
@@ -51,8 +48,7 @@ public class GatewayRouteServiceImpl extends ServiceImpl<GatewayRouteMapper, Gat
     private StringRedisTemplate redisTemplate;
     @Autowired
     private RestTemplate restTemplate;
-    @Autowired
-    private ServiceInterfaceService serviceInterfaceService;
+
 
     @Override
     public void addRoute(RouteDTO routeDTO) {
@@ -185,22 +181,7 @@ public class GatewayRouteServiceImpl extends ServiceImpl<GatewayRouteMapper, Gat
         }
         return faces;
     }
-    @Override
-    public void dealInterface(Long id) {
-        List<InterfaceDTO> interfaceDTOList = new ArrayList<>();
-        GatewayRoute gatewayRoute = this.getById(id);
 
-        String uri = gatewayRoute.getUri();
-        //swagger 服务地址 /v3/api-docs
-        uri = uri.replaceFirst("lb","http");
-        String newUrl = uri + "/v3/api-docs";
-        String result = restTemplate.getForObject(newUrl, String.class);
-        consumerJSON(result,interfaceDTOList,gatewayRoute);
-        List<ServiceInterface> maxList = ServiceInterfaceConverter.INSTANCE.toServiceInterfaceList(interfaceDTOList);
-        List<ServiceInterface> existsList = serviceInterfaceService.lambdaQuery().eq(ServiceInterface::getServiceId, gatewayRoute.getServiceId()).list();
-        List<ServiceInterface> remainList = maxList.stream().filter(item->!existsList.stream().map(ex->ex.getPath()).collect(Collectors.toList()).contains(item.getPath())).collect(Collectors.toList());
-        serviceInterfaceService.saveOrUpdateBatch(remainList);
-    }
 
     @Override
     public void setApplicationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {

@@ -70,14 +70,6 @@ public class AuthorizationManager implements ReactiveAuthorizationManager<Author
     public Mono<AuthorizationDecision> check(Mono<Authentication> authentication, AuthorizationContext authorizationContext) {
         ServerHttpRequest request = authorizationContext.getExchange().getRequest();
         String path = request.getPath().value();
-        String ip = request.getRemoteAddress().getAddress().getHostAddress();
-        //白名单 通过。
-        for (String p : whiteListService.getPathList()){
-            if(antPathMatcher.match(p, path)){
-                return Mono.just(new AuthorizationDecision(true));
-            }
-        }
-        //增加黑名单 ip 限制。
         //白名单 通过。
         for (String p : whiteListService.getPathList()){
             if(antPathMatcher.match(p, path)){

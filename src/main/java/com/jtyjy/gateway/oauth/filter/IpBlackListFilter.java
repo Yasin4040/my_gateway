@@ -1,6 +1,7 @@
 package com.jtyjy.gateway.oauth.filter;
 
 import com.jtyjy.gateway.constants.StringConstants;
+import com.jtyjy.gateway.service.IpBlackService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilterChain;
@@ -29,7 +30,8 @@ public class IpBlackListFilter implements GlobalFilter, Ordered {
 
     @Autowired
     private StringRedisTemplate redisTemplate;
-
+    @Autowired
+    private IpBlackService ipBlackService;
 
     private final RemoteAddressResolver remoteAddressResolver = XForwardedRemoteAddressResolver
             .maxTrustedIndex(1);
@@ -38,8 +40,9 @@ public class IpBlackListFilter implements GlobalFilter, Ordered {
     public Mono<Void> filter(ServerWebExchange exchange, GatewayFilterChain chain) {
         try {
             InetSocketAddress remoteAddress = remoteAddressResolver.resolve(exchange);
-            String clientIp = remoteAddress.getHostName();
-            if (redisTemplate.hasKey(BLACKLIST_IP_KEY + StringConstants.COLON + clientIp)) {
+//            String clientIp = remoteAddress.getHostName();
+            String clientIp = remoteAddress.getAddress().getHostAddress();
+            if (ipBlackService.getIpBlackList().stream().anyMatch(x->clientIp.equals(x.getIp()))) {
                 log.info("intercept invalid request from forbidden ip {}", clientIp);
                 exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
                 return Mono.empty();

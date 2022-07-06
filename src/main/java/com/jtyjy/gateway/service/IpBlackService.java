@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.jtyjy.basic.common.web.Result;
 import com.jtyjy.gateway.query.WhiteListQuery;
 import com.jtyjy.gateway.repository.model.WhiteList;
+import com.jtyjy.gateway.vo.IpBlackVO;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
@@ -25,4 +26,7 @@ public interface IpBlackService {
     Mono<Result> addIp(String ip, String remark);
 
     Mono<Result> delIp(String ip);
+
+    void refreshIpList();
+    List<IpBlackVO> getIpBlackList();
 }

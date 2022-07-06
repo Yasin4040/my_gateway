@@ -41,4 +41,11 @@ public class IpBlackController {
     public Mono<Result> delIp(String ip) {
         return ipBlackService.delIp(ip);
     }
+
+    @PostMapping("/refreshIpList")
+    @ApiOperation(value = "刷新白名单")
+    public Result<Void> refreshIpList(){
+        ipBlackService.refreshIpList();
+        return Result.ok();
+    }
 }

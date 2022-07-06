@@ -42,6 +42,7 @@ public class WhiteListServiceImpl extends ServiceImpl<WhiteListMapper, WhiteList
 
     @Override
     public void refreshPathList() {
+
         pathList = list().stream().map(WhiteList::getPath).collect(Collectors.toList());
     }
 
