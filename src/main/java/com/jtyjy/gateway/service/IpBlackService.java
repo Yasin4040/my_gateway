@@ -23,10 +23,11 @@ public interface IpBlackService {
 
     Mono<Result> getIpList();
 
+    void refreshIpListNoEvent();
+
     Mono<Result> addIp(String ip, String remark);
 
     Mono<Result> delIp(String ip);
-
     void refreshIpList();
     List<IpBlackVO> getIpBlackList();
 }

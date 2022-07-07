@@ -1,5 +1,6 @@
 package com.jtyjy.gateway.oauth.filter;
 
+import com.jtyjy.gateway.cache.IpListCache;
 import com.jtyjy.gateway.constants.StringConstants;
 import com.jtyjy.gateway.service.IpBlackService;
 import lombok.extern.slf4j.Slf4j;
@@ -42,7 +43,7 @@ public class IpBlackListFilter implements GlobalFilter, Ordered {
             InetSocketAddress remoteAddress = remoteAddressResolver.resolve(exchange);
 //            String clientIp = remoteAddress.getHostName();
             String clientIp = remoteAddress.getAddress().getHostAddress();
-            if (ipBlackService.getIpBlackList().stream().anyMatch(x->clientIp.equals(x.getIp()))) {
+            if (IpListCache.get(clientIp)!=null) {
                 log.info("intercept invalid request from forbidden ip {}", clientIp);
                 exchange.getResponse().setStatusCode(HttpStatus.FORBIDDEN);
                 return Mono.empty();
@@ -51,13 +52,12 @@ public class IpBlackListFilter implements GlobalFilter, Ordered {
             log.error("IpBlackListFilter error", e);
         }
         return chain.filter(exchange);
-
     }
 
 
     @Override
     public int getOrder() {
-        //先于认证。
+        //先于认证。 最开始进入
         return -1;
     }
 }
