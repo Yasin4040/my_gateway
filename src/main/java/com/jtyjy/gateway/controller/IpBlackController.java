@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.jtyjy.basic.common.web.Result;
 import com.jtyjy.gateway.service.IpBlackService;
 
+import com.jtyjy.gateway.vo.IpBlackVO;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +26,8 @@ public class IpBlackController {
 
     @GetMapping("/getIpBlacklist")
     @ApiOperation(value = "获取Ip黑名单")
-    public Mono<Result> getIpBlacklist() {
-        return ipBlackService.getIpList();
+    public Mono<Result> getIpBlacklist(IpBlackVO blackVO) {
+        return ipBlackService.getIpList(blackVO);
     }
 
 

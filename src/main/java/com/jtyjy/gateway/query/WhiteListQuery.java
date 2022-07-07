@@ -12,6 +12,9 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 @ApiModel(value="WhiteListQuery对象", description="白名单表")
 public class WhiteListQuery extends PageQuery {
+    @ApiModelProperty(value = "id")
+    private String id;
+
     @ApiModelProperty(value = "url路径")
     private String path;
 

@@ -2,11 +2,15 @@ package com.jtyjy.gateway.service.impl;
 
 import com.jtyjy.basic.common.web.Result;
 import com.jtyjy.gateway.cache.IpListCache;
+import com.jtyjy.gateway.config.RedisListenerConfig;
+import com.jtyjy.gateway.constants.RedisTypeConstants;
 import com.jtyjy.gateway.constants.StringConstants;
 import com.jtyjy.gateway.dto.PageBody;
 import com.jtyjy.gateway.event.DataIpApplicationEvent;
 import com.jtyjy.gateway.service.IpBlackService;
 import com.jtyjy.gateway.vo.IpBlackVO;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.event.RefreshRoutesEvent;
@@ -16,7 +20,6 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
@@ -39,13 +42,18 @@ public class IpBlackServiceImpl implements IpBlackService, ApplicationEventPubli
     public static FastDateFormat ymd = FastDateFormat.getInstance("yyyy-MM-dd");
 
     @Override
-    public Mono<Result> getIpList() {
-        return Mono.just( Result.ok(new PageBody(getIpBlackList())));
+    public Mono<Result> getIpList(IpBlackVO blackVO) {
+        List<IpBlackVO> ipBlackList = getIpBlackList();
+        List<IpBlackVO> result = ipBlackList.stream()
+                .filter(x -> StringUtils.isNotBlank(blackVO.getIp()) && x.getIp().contains(blackVO.getIp()))
+                .filter(x -> StringUtils.isNotBlank(blackVO.getRemark()) && x.getRemark().contains(blackVO.getRemark()))
+                .collect(Collectors.toList());
+        return Mono.just( Result.ok(new PageBody(result)));
     }
 
     @Override
     public void refreshIpList() {
-        refreshIpListNoEvent();
+        redisTemplate.convertAndSend(RedisListenerConfig.SYNC_ROUTE_UPDATE, RedisTypeConstants.IP_UPDATE);
         this.applicationEventPublisher.publishEvent(new DataIpApplicationEvent(this));
     }
 
@@ -78,7 +86,12 @@ public class IpBlackServiceImpl implements IpBlackService, ApplicationEventPubli
     }
     @Override
     public List<IpBlackVO>  getIpBlackList(){
-       return IpListCache.getAll();
+
+        List<IpBlackVO> ipBlackVOList = IpListCache.getAll();
+        if (CollectionUtils.isEmpty(ipBlackVOList)) {
+            refreshIpListNoEvent();
+        }
+        return IpListCache.getAll();
     }
 
     @Override

@@ -21,7 +21,7 @@ import java.util.List;
  */
 public interface IpBlackService {
 
-    Mono<Result> getIpList();
+    Mono<Result> getIpList(IpBlackVO blackVO);
 
     void refreshIpListNoEvent();
 

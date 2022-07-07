@@ -18,13 +18,11 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.reactive.function.client.ExchangeStrategies;
 import org.springframework.web.reactive.function.client.WebClient;
-import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.security.Principal;
-import java.util.List;
-import java.util.Map;
+import java.util.ArrayList;
 
 /**
  * <p>
@@ -80,7 +78,14 @@ public class GatewayRouteController {
 
     @GetMapping("/getAllInterface")
     @ApiOperation(value = "获取所有接口")
-    public Mono<Result<PageBody<InterfaceDTO>>> getAllInterface(String serviceUrl){
+    public Mono<Result<PageBody>> getAllInterface(@RequestParam(name = "serviceUrl") String serviceUrl,
+                                                  @RequestParam(name = "path") String path,
+
+
+                                                  @RequestParam(name = "summary")  String summary){
+
+
+        PageBody<InterfaceDTO> result= new PageBody<InterfaceDTO>(new ArrayList<>());
         return loadBalanceWebClientBuilder
                 .exchangeStrategies(ExchangeStrategies.builder()
                         .codecs(configurer -> configurer
@@ -91,30 +96,31 @@ public class GatewayRouteController {
                 .build()
                 .get().retrieve()
                 .bodyToMono(String.class)
-                .map(x->Result.ok(new PageBody(gatewayRouteService.mapToInterfaceDTO(x))))
-                ;
+
+                .map(x->Result.ok(new PageBody(
+                        gatewayRouteService.mapToInterfaceDTO(x,path,summary)
+                               )
+                ))
+               .onErrorReturn(new Result("500","获取不到实例",result));
+
     }
 
 
-    @GetMapping("/testFlux")
-    @ApiOperation(value = "testFlux")
-    public Mono<Result<PageBody<InterfaceDTO>>> testFluxInner(Long id){
-        return loadBalanceWebClientBuilder
-                .exchangeStrategies(ExchangeStrategies.builder()
-                        .codecs(configurer -> configurer
-                                .defaultCodecs()
-                                .maxInMemorySize(10 * 1024 * 1024))
-                 .build())
-                .baseUrl("http://JTYJY-API-GATEWAY/v3/api-docs")
-                .build()
-                .get().retrieve()
-                .bodyToMono(String.class)
-                .map(x->Result.ok(new PageBody(gatewayRouteService.mapToInterfaceDTO(x))))
-
-
-
-                //  List<InterfaceDTO>
-                ;
-    }
+//    @GetMapping("/testFlux")
+//    @ApiOperation(value = "testFlux")
+//    public Mono<Result<PageBody<InterfaceDTO>>> testFluxInner(Long id){
+//        return loadBalanceWebClientBuilder
+//                .exchangeStrategies(ExchangeStrategies.builder()
+//                        .codecs(configurer -> configurer
+//                                .defaultCodecs()
+//                                .maxInMemorySize(10 * 1024 * 1024))
+//                 .build())
+//                .baseUrl("http://JTYJY-API-GATEWAY/v3/api-docs")
+//                .build()
+//                .get().retrieve()
+//                .bodyToMono(String.class)
+//                .map(x->Result.ok(new PageBody(gatewayRouteService.mapToInterfaceDTO(x))));
+//
+//    }
 }
 

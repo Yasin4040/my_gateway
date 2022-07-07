@@ -25,11 +25,11 @@ public class TimerRefreshRouteTask {
     private GatewayRouteService gatewayRouteService;
 
     /**
-     * 每30秒钟执行一次缓存同步
+     * 每5分钟执行一次缓存同步
      */
     @Scheduled(fixedRate = 5*60*1000)
     public void syncRouteCache(){
-        log.info("执行定时任务：同步刷新到路由、客户端、IP等配置...");
+        log.info("执行定时任务：同步刷新到路由、白名单、黑IP等配置...");
         gatewayRouteService.reloadConfig();
         whiteListService.refreshPathList();
         ipBlackService.refreshIpListNoEvent();

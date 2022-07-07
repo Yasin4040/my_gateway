@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.jtyjy.gateway.config.RedisListenerConfig;
+import com.jtyjy.gateway.constants.RedisTypeConstants;
 import com.jtyjy.gateway.converter.RouteConverter;
 import com.jtyjy.gateway.dto.InterfaceDTO;
 import com.jtyjy.gateway.dto.RouteDTO;
@@ -86,7 +87,7 @@ public class GatewayRouteServiceImpl extends ServiceImpl<GatewayRouteMapper, Gat
 
     @Override
     public void reloadConfig() {
-        redisTemplate.convertAndSend(RedisListenerConfig.SYNC_ROUTE_UPDATE, "update");
+        redisTemplate.convertAndSend(RedisListenerConfig.SYNC_ROUTE_UPDATE, RedisTypeConstants.ROUTE_UPDATE);
         this.applicationEventPublisher.publishEvent(new RefreshRoutesEvent(this));
     }
 
@@ -102,71 +103,26 @@ public class GatewayRouteServiceImpl extends ServiceImpl<GatewayRouteMapper, Gat
         return RouteConverter.INSTANCE.toPageRouteVO(page);
     }
 
-    @Override
-    public List<InterfaceDTO> getAllInterface(Long id) {
-        GatewayRoute gatewayRoute = this.getById(id);
-        List<InterfaceDTO> interfaceDTOList = new ArrayList<>();
-        if (gatewayRoute == null) {
-            return null;
-        }
-        //uri  lb://service_name
-        String uri = gatewayRoute.getUri();
-        //swagger 服务地址 /v3/api-docs
-        uri = uri.replaceFirst("lb","http");
-        String newUrl = uri + "/v3/api-docs";
-
-        String result = restTemplate.getForObject(newUrl, String.class);
-//        consumerJSON(result,interfaceDTOList);
-        return interfaceDTOList;
-    }
-
-
-    public  void consumerJSON(String result, List<InterfaceDTO> interfaceDTOList, GatewayRoute gatewayRoute){
-        String path = getJsonValue(result, "paths");
-        if(StringUtils.isBlank(path) ){
-            return;
-        }
-        Set<String> pathSet = getKeySet(path);
-        for (String p : pathSet) {
-            InterfaceDTO dto = new InterfaceDTO();
-            dto.setPath(p);
-//            dto.setServiceUrl(gatewayRoute.getUri());
-//            dto.setServiceId(gatewayRoute.getServiceId());
-            //当前对象
-            //当前key对应的值
-            String pathValue = getJsonValue(path, p);
-
-            String type = getKeySet(pathValue).stream().findFirst().get();
-
-            dto.setType(type);
-
-            String typeValue = getJsonValue(pathValue, type);
-            String tag = getJsonValue(typeValue, "tags");
-            dto.setTag(tag);
-            String summary = getJsonValue(typeValue, "summary");
-            dto.setSummary(summary);
-            interfaceDTOList.add(dto);
-        }
-    }
-
-
 
     @Override
-    public  List<InterfaceDTO> mapToInterfaceDTO(String result){
+    public  List<InterfaceDTO> mapToInterfaceDTO(String result,String path,String summary){
         List<InterfaceDTO> faces = new ArrayList<>();
-        String path = getJsonValue(result, "paths");
-        if(StringUtils.isBlank(path) ){
+        String paths = getJsonValue(result, "paths");
+        if(StringUtils.isBlank(paths) ){
             return null;
         }
-        Set<String> pathSet = getKeySet(path);
+        Set<String> pathSet = getKeySet(paths);
+        //过滤 路径path 搜索
+        if(StringUtils.isNotBlank(path)){
+            pathSet =  pathSet.stream().filter(x->x.contains(path)).collect(Collectors.toSet());
+        }
         for (String p : pathSet) {
             InterfaceDTO dto = new InterfaceDTO();
             dto.setPath(p);
-//            dto.setServiceUrl(gatewayRoute.getUri());
-//            dto.setServiceId(gatewayRoute.getServiceId());
+
             //当前对象
             //当前key对应的值
-            String pathValue = getJsonValue(path, p);
+            String pathValue = getJsonValue(paths, p);
 
             String type = getKeySet(pathValue).stream().findFirst().get();
 
@@ -175,8 +131,12 @@ public class GatewayRouteServiceImpl extends ServiceImpl<GatewayRouteMapper, Gat
             String typeValue = getJsonValue(pathValue, type);
             String tag = getJsonValue(typeValue, "tags");
             dto.setTag(tag);
-            String summary = getJsonValue(typeValue, "summary");
-            dto.setSummary(summary);
+            String summaryResult = getJsonValue(typeValue, "summary");
+            //过滤 summary 路径说明 搜索
+            if(StringUtils.isNotBlank(summary)&& !summaryResult.contains(summary)){
+               break;
+            }
+            dto.setSummary(summaryResult);
             faces.add(dto);
         }
         return faces;
